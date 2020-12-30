@@ -113,6 +113,10 @@ function nextDecision(){
             for(var j = 0; j < enredo[i][2].length && check == false; j++){
                 if(choiceInput.value == enredo[i][2][j]){
                     caminho += choiceInput.value;
+                    updateBackground();
+                    clearButton();
+                    fadeText();                   
+                    choiceInput.setAttribute("disabled", "");
                     check = true;
                 }
             }
@@ -122,11 +126,6 @@ function nextDecision(){
         }
     }
 
-    updateBackground();
-    clearButton();
-    fadeText();
-
-    choiceInput.setAttribute("disabled", "");
 
     var outerDiv = createDiv();
     outerDiv.setAttribute("id", "scrollItem");
