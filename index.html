@@ -3,32 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sector 34</title>
-    <link rel="stylesheet" href="./style.css">
-    
+    <link rel="stylesheet" href="./themes/theme_base_iron.css">
+    <title>Outpost</title>
 </head>
 <body>
-    <div id="imageOptions" class="flexContainer">
-        <p id="imageOptionsText">Carregar Imagens?</p><br>
-        <input type="radio" value="true" name="imageOptions">
-        <label for="true" id="imageOptionsText">Sim</label><br>
-        <input type="radio" value="false" name="imageOptions" checked="checked">
-        <label for="false" id="imageOptionsText">Não</label><br>
-    </div>
-    <div id="megaContainer" class="flexContainer">
-        <div id="topContainer" class="flexContainer">
-            <button id="startButton" onclick="jogo()">ENTER SECTOR 34</button>
+    <div class="flexContainer" id="gameContainer">
+        <!-- T O P -->
+        <div class="flexContainer" id="topDiv">
+            <h1>Outpost</h1>
         </div>
-        <div id="bottomContainer" class="flexContainer">
-            <div id="scrollItem" class="flexContainer">
-                <br>
-                <p>Horas atrás um time de cientistas foi chamado ao setor 34 do laboratório central da colônia 55C.</p>
-                <br>
-                <p>Esse setor é famoso por suas contribuições no campo de xenomorfologia, mas principalmente por seus segredos...</p>
-                <br>
+
+        <!-- L E F T -->
+        <div class="flexContainer" id="leftDiv">
+            
+        </div>
+
+        <!-- M I D D L E -->
+        <div class="flexContainer" id="midDiv">
+            <div class="flexContainer" id="gameMenu">
+                <p>Hello!</p>
+            </div>
+            <div class="flexContainer" id="gameButtonsDiv">
+
             </div>
         </div>
+
+        <!-- R I G H T -->
+        <div class="flexContainer" id="rightDiv">
+
+        </div>
     </div>
-    <script src="./jogo.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
