@@ -1,9 +1,10 @@
 export class Building{
-    constructor(name, stk, prodRate, cost, costRate, display, unlocked, flavorText){
+    constructor(name, stk, prodRate, cost, baseCost, costRate, display, unlocked, flavorText){
         this.name = name;
         this.stk = stk;
         this.prodRate = prodRate;
         this.cost = cost;
+        this.baseCost = baseCost;
         this.costRate = costRate;
         this.display = display;
         this.unlocked = unlocked;
@@ -17,8 +18,8 @@ export class Building{
     }
 
     updateCost(){
-        for(const i in this.cost){
-            this.cost[i][0] = (this.cost[i][0] * this.costRate).toFixed(2);
+        for(let i in this.cost){
+            this.cost[i][0] = (this.cost[i][0] * this.costRate);
         }
     }
 
@@ -26,6 +27,12 @@ export class Building{
         this.stk++;
         this.updateCost();
         this.updateButtonText();
+    }
+
+    recalculateCost(){
+        for(let i in this.cost){
+            this.cost[i][0] = (this.baseCost[i][0] * (this.costRate ** (this.stk-1)));
+        }
     }
 }
 
@@ -46,12 +53,13 @@ export class ProdRate{
 }
 
 export class Research{
-    constructor(name, cost, display, unlocked, method, flavorText){
+    constructor(name, cost, display, unlocked, method, unlockMethod, flavorText){
         this.name = name;
         this.cost = cost;
         this.display = display;
         this.unlocked = unlocked;
         this.method = method;
+        this.unlock = unlockMethod;
         this.flavorText = flavorText;
         this.purchased = false;
     }

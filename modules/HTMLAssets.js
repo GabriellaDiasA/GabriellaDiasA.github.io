@@ -45,7 +45,7 @@ function infoDivIn(object, parent){
     for(let i in object.cost){
         let p = document.createElement('p');
         p.setAttribute("id", "infoText");
-        p.textContent = `${object.cost[i][1]}: ${object.cost[i][0]}`;
+        p.textContent = `${object.cost[i][1]}: ${object.cost[i][0].toFixed(2)}`;
         infoDiv.append(p);
     }
 
@@ -206,10 +206,10 @@ export function updateGameMenu(){
 function createResearchMenu(){
     if (currentMenu != "Research") return;
     DOM.gameButtonsDiv.style.flexFlow = "column";
-    let count = DOM.gameButtonsDiv.childElementCount;
-    for(count; count < Techs.researchArray.length; count++){
+    for(let count = 0; count < Techs.researchArray.length; count++){
         let research = Techs.researchArray[count];
-        if(research.display == true && research.unlocked == true){
+        let p = document.getElementById(research.name);
+        if(research.display == true && research.unlocked == true && p == null){
             insertButton(research, Player.purchaseTechnology.bind(research));
         }
     }
@@ -217,8 +217,7 @@ function createResearchMenu(){
 }
 
 function updateResearchConditions(){
-    let count = DOM.gameButtonsDiv.childElementCount;
-    for(count; count < Techs.researchArray.length; count++){
+    for(let count = 0; count < Techs.researchArray.length; count++){
         let research = Techs.researchArray[count];
         let costCounter = 0;
         for(let i in research.cost){
@@ -226,7 +225,8 @@ function updateResearchConditions(){
                 costCounter++;
             }
         }
-        if(costCounter == Object.keys(research.cost).length && research.unlocked == true){
+        let p = document.getElementById(research.name);
+        if(costCounter == Object.keys(research.cost).length && research.unlocked == true && p == null){
             research.display = true;
             createResearchMenu();
         }
