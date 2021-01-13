@@ -106,7 +106,6 @@ export function createConstructionMenu(){
         let building = Buildings.buildingArray[count];
         if(building.display == true && building.unlocked == true){
             insertButton(building, Player.purchaseBuilding.bind(building));
-            console.log(count);
         }
     }
     updateConstructionMenu();
