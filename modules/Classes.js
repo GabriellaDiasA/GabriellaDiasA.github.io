@@ -1,29 +1,19 @@
 export class Building{
-    constructor(name, stk, prodRate, cost, costRate){
+    constructor(name, stk, prodRate, cost, costRate, display, unlocked, flavorText){
         this.name = name;
         this.stk = stk;
         this.prodRate = prodRate;
         this.cost = cost;
         this.costRate = costRate;
+        this.display = display;
+        this.unlocked = unlocked;
+        this.flavorText = flavorText;
     }
 
-    updateResourceMenuText(){
-        let resourceMenuText = document.getElementById(`${this.name}`);
-        if (resourceMenuText == null) return 0;
-        resourceMenuText.textContent = `${this.name}: ${this.stk}`;
-    }
-
-    updateInfoText(){
-        let infoDiv = document.getElementById('infoDiv');
-        let count = infoDiv.childElementCount;
-        for(let i = 0; i < count; i++){
-            infoDiv.childNodes[0].remove();
-        }
-        for(let i in this.cost){
-            let p = document.createElement('p');
-            p.textContent = `${this.cost[i][1]}: ${this.cost[i][0]}`;
-            infoDiv.append(p);
-        }
+    updateButtonText(){
+        let button = document.getElementById(`${this.name}`);
+        if (button == null) return 0;
+        button.textContent = `${this.name}: ${this.stk}`;
     }
 
     updateCost(){
@@ -35,8 +25,7 @@ export class Building{
     interact(){
         this.stk++;
         this.updateCost();
-        this.updateResourceMenuText();
-        this.updateInfoText();
+        this.updateButtonText();
     }
 }
 
@@ -45,5 +34,32 @@ export class Cost{
         this.ironOre = [ironOre, "Iron ore"];
         this.copperOre = [copperOre, "Copper ore"];
         this.titaniumOre = [titaniumOre, "Titanium ore"];
+    }
+}
+
+export class ProdRate{
+    constructor(ironOre, copperOre, titaniumOre){
+        this.ironOre = [ironOre, "Iron ore"];
+        this.copperOre = [copperOre, "Copper ore"];
+        this.titaniumOre = [titaniumOre, "Titanium ore"];
+    }
+}
+
+export class Research{
+    constructor(name, cost, display, unlocked, method, flavorText){
+        this.name = name;
+        this.cost = cost;
+        this.display = display;
+        this.unlocked = unlocked;
+        this.method = method;
+        this.flavorText = flavorText;
+        this.purchased = false;
+    }
+
+    disableButton(){
+        let text = document.getElementById(`${this.name}`);
+        let button = text.parentNode;
+
+        button.style.backgroundColor = "rgb(60,5,5)";
     }
 }

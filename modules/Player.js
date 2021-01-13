@@ -1,9 +1,8 @@
 import * as Buildings from './Buildings.js';
 import { timeInterval } from './constants.js';
-import { Building } from './Classes.js';
 
 export let Player = {
-    ironOre: [34, "Iron ore"],
+    ironOre: [15, "Iron ore"],
     copperOre: [0, "Copper ore"],
     titaniumOre: [0, "Titanium ore"],
 
@@ -31,15 +30,22 @@ export let Player = {
         }
     },
 
-    updateIron: setInterval(() => {
-        Player.ironOre[0] += Buildings.IronMine.stk * Buildings.IronMine.prodRate * (timeInterval / 1000);
-    }, timeInterval),
-    
-    updateCopper: setInterval(() => {
-        Player.copperOre[0] += Buildings.CopperMine.stk * Buildings.CopperMine.prodRate * (timeInterval / 1000);
-    }, timeInterval),
-    
-    updateTitanium: setInterval(() => {
-        Player.titaniumOre[0] += Buildings.TitaniumMine.stk * Buildings.TitaniumMine.prodRate * (timeInterval / 1000);
+    purchaseTechnology: function(){
+        if(this.purchased == true) return;
+        if(Player.checkCost(this) == true){
+            for(let i in this.cost){
+                Player[i][0] -= this.cost[i][0];
+            }
+            this.method();
+        }
+    },
+
+    updateResource: setInterval(() => {
+        for(let count = 0; count < Buildings.buildingArray.length; count++){
+            let building = Buildings.buildingArray[count];
+            for(let i in building.prodRate){
+                Player[i][0] += building.prodRate[i][0] * building.stk * (timeInterval / 1000);
+            }
+        }
     }, timeInterval),
 }

@@ -6,13 +6,18 @@
 }
 
 body{
+    font-family:Arial, Helvetica, sans-serif;
     overflow: hidden;
     background-color: #050505;
 }
 
 h1{
-    font-family:Arial, Helvetica, sans-serif;
     color: #EEEEEE;
+}
+
+h3{
+    font-size: 18px;
+    color: white;
 }
 
 p{
@@ -91,11 +96,9 @@ p{
 }
 
 #gameMenu{
-    padding-top: 5px;
-    padding-left: 5px;
     z-index: 1;
     position: absolute;
-    height: 35px;
+    height: 40px;
     width: inherit;
     background-color: #201818;
 
@@ -105,9 +108,23 @@ p{
     border-bottom-width: 2px;
 }
 
+.gameMenuItem{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+    cursor: pointer;
+
+    background-color: #201818;
+    border: solid 1px #242222
+}
+
 #gameButtonsDiv{
     padding: 10px;
-    margin-top: 35px;
+    margin-top: 40px;
     overflow-y: scroll; 
     flex-flow: row wrap;
     justify-content: flex-start;
@@ -131,7 +148,7 @@ p{
     color: #EEEEEE;
     justify-content: center;
     align-items: center;
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: rgb(90, 0, 0);
     border-radius: 10px;
     border: 2px solid rgba(0, 0, 0, 0.5);
     font-size: 30px;
@@ -144,7 +161,7 @@ p{
 }
 
 #infoDiv{
-    padding: 10px;
+    padding: 15px;
     display: inline;
     z-index: 2;
     position: absolute;
@@ -152,8 +169,13 @@ p{
     min-width: 100px;
     height: auto;
     width: auto;
-    background-color: #201818;
-    border: 1px solid #242222;
+    max-width: 200px;
+    background-color: #453535;
+    border: 1px solid #403030;
+}
+
+em{
+    font-size: 11px;
 }
 
 /* Webkit stuff */
