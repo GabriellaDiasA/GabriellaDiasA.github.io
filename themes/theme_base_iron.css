@@ -6,6 +6,7 @@
 }
 
 body{
+    user-select: none;
     font-family:Arial, Helvetica, sans-serif;
     overflow: hidden;
     background-color: #050505;
@@ -135,7 +136,7 @@ p{
     padding: 5px;
     display: flex;
     height: 60px;
-    width: 33.33%;
+    width: 25%;
     justify-content: center;
     align-items: center;
 }
@@ -148,6 +149,7 @@ p{
     color: #EEEEEE;
     justify-content: center;
     align-items: center;
+    flex-flow: column;
     background-color: rgb(90, 0, 0);
     border-radius: 10px;
     border: 2px solid rgba(0, 0, 0, 0.5);
@@ -165,8 +167,8 @@ p{
     display: inline;
     z-index: 2;
     position: absolute;
-    min-height: 100px;
-    min-width: 100px;
+    min-height: 10px;
+    min-width: 10px;
     height: auto;
     width: auto;
     max-width: 200px;
@@ -176,6 +178,39 @@ p{
 
 em{
     font-size: 11px;
+}
+
+.switchDiv{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: auto;
+    background-color: rgba(255,255,255,0.1);
+    padding-right: 3px;
+    padding-left: 3px;
+    margin-top: 2px;
+}
+
+span{
+    display: block;
+    height: auto;
+    border-right: 2px;
+    border-left: 2px;
+    width: 5px;
+    font-size: 14px;
+    color: white;
+}
+
+.switchOn p{
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.switchOff p{
+    cursor: pointer;
+    font-size: 16px;
 }
 
 /* Webkit stuff */

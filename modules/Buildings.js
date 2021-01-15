@@ -1,44 +1,98 @@
-import { Building, Cost, ProdRate } from './Classes.js';
+import { Building, Machine, ResourceList, StorageBuilding } from './Classes.js';
+import { Player } from './PlayerInv.js';
 
 /**
  * BUILDING COSTS AND PROD RATES
+ * Scrap, Iron Ore, Iron, Copper Ore, Titanium Ore
  */
 
-let IronMineCost = new Cost(10, 0, 0);
-let CopperMineCost = new Cost(100, 0, 0);
-let TitaniumMineCost = new Cost(1000, 750, 0);
-let CoreDrillCost = new Cost(2500, 1500, 1000);
+let ScavengerDroneCost = new ResourceList(15, 0, 0, 0, 0);
+let MiningDroneMkICost = new ResourceList(100, 0, 0, 0, 0);
+let MiningDroneMkIICost = new ResourceList(125, 0, 25, 0, 0);
+let SmelterCost = new ResourceList(150, 100, 0, 0, 0);
+let ElectrolyzerCost = new ResourceList(0, 0, 50, 0, 0);
 
-let IronMineCostBase = new Cost(10, 0, 0);
-let CopperMineCostBase = new Cost(100, 0, 0);
-let TitaniumMineCostBase = new Cost(1000, 750, 0);
-let CoreDrillCostBase = new Cost(2500, 1500, 1000);
+let ScavengerDroneCostBase = new ResourceList(15, 0, 0, 0, 0);
+let MiningDroneMkICostBase = new ResourceList(0, 10, 0, 0, 0);
+let MiningDroneMkIICostBase = new ResourceList(125, 0, 25, 0, 0);
+let SmelterCostBase = new ResourceList(150, 100, 0, 0, 0);
+let ElectrolyzerCostBase = new ResourceList(0, 0, 50, 0, 0);
 
-let IronMineProdRate = new ProdRate(1, 0, 0);
-let CopperMineProdRate = new ProdRate(0, 0.6, 0);
-let TitaniumMineProdRate = new ProdRate(0.1, 0.1, 0.3);
-let CoreDrillProdRate = new ProdRate(10, 8, 5);
+let ScavengerDroneProdRate = new ResourceList(0.15, 0, 0, 0, 0);
+let MiningDroneMkIProdRate = new ResourceList(0, 0.2, 0, 0, 0);
+let MiningDroneMkIIProdRate = new ResourceList(0, 0.3, 0, 0.1, 0);
+let SmelterProdRate = new ResourceList(0, -5, 0.1, 0, 0);
+let ElectrolyzerProdRate = new ResourceList(-4, 0, 0.05, 0, 0);
 
 /**
  * FLAVOR TEXT~
  */
 
- let IronMineFlavorText = "Dark and scary, but we all have to start somewhere.";
- let CopperMineFlavorText = "Not as dark but just as scary. Consider it an improvement.";
- let TitaniumMineFlavorText = "This place is just as shiny as you'd think: not at all!";
- let CoreDrillFlavorText = "Dark, scary AND extra dangerous. Consider it an improvement?";
+let ScavengerDroneFlavorText = "These little buggers get their hands dirty for you.";
+let MiningDroneMkIFlavorText = "They use meteor impact sites as makeshift quarries.";
+let MiningDroneMkIIFlavorText = "Bigger, faster, stronger";
+let SmelterFlavorText = "Hot!";
+let ElectrolyzerFlavorText = "Shocking!";
+
+/**
+ * STORAGE BUILDING COSTS AND EFFECTS
+ * Scrap, Iron Ore, Iron, Copper Ore, Titanium Ore
+ */
+
+let PitCost = new ResourceList(50, 0, 0, 0, 0);
+let WarehouseCost = new ResourceList(250, 0, 50, 0, 0);
+
+let PitCostBase = new ResourceList(50, 0, 0, 0, 0);
+let WarehouseCostBase = new ResourceList(250, 0, 50, 0, 0);
+
+let PitEffect = new ResourceList(200, 150, 25, 150, 50);
+let WarehouseEffect = new ResourceList(250, 250, 150, 250, 150);
+
+/**
+ * STORAGE FLAVOR~
+ */
+
+let PitFlavorText = "I guess you could do that...";
+let WarehouseFlavorText = "Consider this an improvement."
 
 /**
  * BUILDINGS
  */
 
-export let IronMine = new Building('Iron Mine', 0, IronMineProdRate, IronMineCost, IronMineCostBase,
-                                    1.15, true, true, IronMineFlavorText);
-export let CopperMine = new Building('Copper Mine', 0, CopperMineProdRate, CopperMineCost, CopperMineCostBase,
-                                    1.15, false, false, CopperMineFlavorText);
-export let TitaniumMine = new Building('Titanium Mine', 0, TitaniumMineProdRate, TitaniumMineCost, TitaniumMineCostBase,
-                                    1.16, false, false, TitaniumMineFlavorText);
-export let CoreDrill = new Building('Core Drill', 0, CoreDrillProdRate, CoreDrillCost, CoreDrillCostBase,
-                                    1.5, false, false, CoreDrillFlavorText);
+export let ScavengerDrone = new Building('Scavenger Drone', 0, ScavengerDroneProdRate, ScavengerDroneCost, ScavengerDroneCostBase,
+1.011, false, false, ScavengerDroneFlavorText);
+export let MiningDroneMkI = new Building('Mining Drone Mk. I', 0, MiningDroneMkIProdRate, MiningDroneMkICost, MiningDroneMkICostBase,
+1.15, false, false, MiningDroneMkIFlavorText);
+export let MiningDroneMkII = new Building('Mining Drone Mk. II', 0, MiningDroneMkIIProdRate, MiningDroneMkIICost, MiningDroneMkIICostBase,
+1.15, false, false, MiningDroneMkIIFlavorText);
+export let Smelter = new Machine('Smelter', 0, 0, SmelterProdRate, SmelterCost, SmelterCostBase,
+1.15, false, false, SmelterFlavorText);
+export let Electrolyzer = new Machine('Electrolyzer', 0, 0, ElectrolyzerProdRate, ElectrolyzerCost, ElectrolyzerCostBase,
+1.17, false, false, ElectrolyzerFlavorText);
 
-export let buildingArray = [IronMine, CopperMine, TitaniumMine, CoreDrill];
+// Only PRODUCTION buildings here, please.
+export let buildingArray = [ScavengerDrone, MiningDroneMkI, Smelter, Electrolyzer];
+
+/**
+ * STORAGE BUILDINGS
+ */
+
+export let Pit = new StorageBuilding('Pit', 0, PitEffect, PitCost, PitCostBase,
+1.25, false, false, PitFlavorText);
+export let Warehouse = new StorageBuilding('Warehouse', 0, WarehouseEffect, WarehouseCost, WarehouseCostBase,
+1.3, false, false, WarehouseFlavorText);
+
+export let storageArray = [Pit, Warehouse];
+
+/**
+ * SCAVENGE WASTELAND
+ */
+
+export let Scavenge = {
+    name: 'Scavenge Wasteland',
+    flavorText: 'These lands were once green. Brave the harsh conditions and return with precious scrap metal.',
+
+    interact: function(){
+        if(Player.scrap.amount < Player.scrap.limit) Player.scrap.amount++;
+    }
+}

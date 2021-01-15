@@ -1,3 +1,5 @@
+import { Player } from './PlayerInv.js';
+
 export class Building{
     constructor(name, stk, prodRate, cost, baseCost, costRate, display, unlocked, flavorText){
         this.name = name;
@@ -19,7 +21,7 @@ export class Building{
 
     updateCost(){
         for(let i in this.cost){
-            this.cost[i][0] = (this.cost[i][0] * this.costRate);
+            this.cost[i].amount = (this.cost[i].amount * this.costRate);
         }
     }
 
@@ -31,24 +33,18 @@ export class Building{
 
     recalculateCost(){
         for(let i in this.cost){
-            this.cost[i][0] = (this.baseCost[i][0] * (this.costRate ** (this.stk-1)));
+            this.cost[i].amount = (this.baseCost[i].amount * (this.costRate ** (this.stk-1)));
         }
     }
 }
 
-export class Cost{
-    constructor(ironOre, copperOre, titaniumOre){
-        this.ironOre = [ironOre, "Iron ore"];
-        this.copperOre = [copperOre, "Copper ore"];
-        this.titaniumOre = [titaniumOre, "Titanium ore"];
-    }
-}
-
-export class ProdRate{
-    constructor(ironOre, copperOre, titaniumOre){
-        this.ironOre = [ironOre, "Iron ore"];
-        this.copperOre = [copperOre, "Copper ore"];
-        this.titaniumOre = [titaniumOre, "Titanium ore"];
+export class ResourceList{
+    constructor(scrap, ironOre, iron, copperOre, titaniumOre){
+        this.scrap = {amount: scrap, label: "Scrap"};
+        this.ironOre = {amount: ironOre, label: "Iron Ore"};
+        this.iron = {amount: iron, label: "Iron"};
+        this.copperOre = {amount: copperOre, label: "Copper Ore"};
+        this.titaniumOre = {amount: titaniumOre, label: "Titanium Ore"};
     }
 }
 
@@ -70,4 +66,32 @@ export class Research{
 
         button.style.backgroundColor = "rgb(60,5,5)";
     }
+}
+export class Machine extends Building{
+    constructor(name, stk, maxStk, prodRate, cost, baseCost, costRate, display, unlocked, flavorText){
+        super(name, stk, prodRate, cost, baseCost, costRate, display, unlocked, flavorText);
+        this.maxStk = maxStk;
+        this.eventListenerCheck = false;
+    }
+
+    interact(){
+        this.maxStk++;
+        super.interact();
+    }
+
+    updateButtonText(){
+        let button = document.getElementById(`${this.name}`);
+        if (button == null) return 0;
+        button.textContent = `${this.name}: ${this.stk}/${this.maxStk}`
+    }
+}
+
+export class StorageBuilding extends Building{
+    constructor(name, stk, limitIncrease, cost, baseCost, costRate, display, unlocked, flavorText){
+        super(name, stk, false, cost, baseCost, costRate, display, unlocked, flavorText);
+        this.limitIncrease = limitIncrease;
+    }
+}
+
+export class LimitIncrease extends ResourceList{
 }

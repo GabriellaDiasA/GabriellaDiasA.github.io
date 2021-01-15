@@ -1,31 +1,25 @@
-import * as DOM from './HTMLElementsConst.js';
-import { Building, Cost, Research } from './Classes.js';
+import * as DOM from './HTMLObjects.js';
+import { Building, Machine, Research, StorageBuilding } from './Classes.js';
 import * as Buildings from './Buildings.js';
 import * as Techs from './Technologies.js';
-import { Player } from './Player.js';
+import { Player } from './PlayerInv.js';
+import { PlayerMethod } from './PlayerMethod.js';
 import { timeInterval, yOffset } from './constants.js'
+import { productionList } from './utils.js';
 
-let currentMenu = "Construction";
-let constructionCheck = false;
+DOM.menuArray.outpost.method = createOutpostMenu;
+DOM.menuArray.research.method = createResearchMenu;
+DOM.menuArray.storage.method = createStorageMenu;
+
+export let currentMenu = "Outpost";
+let outpostCheck = false;
 let researchCheck = false;
+let storageCheck = false;
 
-function itemButton(object){
-    let buttonContainer = document.createElement('div');
-    let button = document.createElement('div');
-    let p = document.createElement('p');
-
-    buttonContainer.setAttribute("class", "itemSpace");
-    button.setAttribute("class", "item");
-    p.setAttribute("id", `${object.name}`);
-    if (object.constructor.name == Building.name) p.textContent = `${object.name}: ${object.stk}`;
-    if (object.constructor.name == Research.name){
-        p.textContent = `${object.name}`;
-        if(object.purchased == true) button.style.backgroundColor = "rgb(60,5,5)";
-    }
-    button.append(p);
-    buttonContainer.append(button);
-
-    return buttonContainer;
+function updateCheck(){
+    outpostCheck = false;
+    researchCheck = false;
+    storageCheck = false;
 }
 
 function infoDivIn(object, parent){
@@ -38,20 +32,21 @@ function infoDivIn(object, parent){
     infoDiv.style.top = y.toString() + "px";
     infoDiv.style.left = x.toString() + "px";
 
-    let costTitle = document.createElement('h3');
-    costTitle.textContent = "Costs :";
-    infoDiv.append(costTitle);
+    if(object.name != 'Scavenge Wasteland'){
+        let costTitle = document.createElement('h3');
+        costTitle.textContent = "Costs :";
+        infoDiv.append(costTitle);
 
-    for(let i in object.cost){
-        let p = document.createElement('p');
-        p.setAttribute("id", "infoText");
-        p.textContent = `${object.cost[i][1]}: ${object.cost[i][0].toFixed(2)}`;
-        infoDiv.append(p);
+        for(let i in object.cost){
+            let p = document.createElement('p');
+            p.setAttribute("id", "infoText");
+            p.textContent = `${object.cost[i].label}: ${object.cost[i].amount.toFixed(2)}`;
+            if(object.cost[i].amount != 0) infoDiv.append(p);
+        }
     }
 
-    infoDiv.append(document.createElement('br'));
-
-    if(object.constructor.name == Building.name){
+    if(object.constructor.name == Building.name || object.constructor.name == Machine.name){
+        infoDiv.append(document.createElement('br'));
         let prodTitle = document.createElement('h3');
         prodTitle.textContent = "Produces :";
         infoDiv.append(prodTitle);
@@ -59,16 +54,29 @@ function infoDivIn(object, parent){
         for(let i in object.prodRate){
             let p = document.createElement('p');
             p.setAttribute("id", "infoText");
-            p.textContent = `${object.prodRate[i][1]}: ${object.prodRate[i][0]}/s`;
-            infoDiv.append(p);
+            p.textContent = `${object.prodRate[i].label}: ${object.prodRate[i].amount}/s`;
+            if(object.prodRate[i].amount != 0) infoDiv.append(p);
         }
     }
 
-    let p = document.createElement('p');
-    let flavorText = document.createElement('em');
+    if(object.constructor.name == StorageBuilding.name){    
+        infoDiv.append(document.createElement('br'));
+        let prodTitle = document.createElement('h3');
+        prodTitle.textContent = "Expands :";
+        infoDiv.append(prodTitle);
+    
+        for(let resource in object.limitIncrease){
+            let p = document.createElement('p');
+            p.setAttribute("id", "infoText");
+            p.textContent = `${object.limitIncrease[resource].label}: ${object.limitIncrease[resource].amount}`;
+            if(object.limitIncrease[resource].amount != 0 && Player[resource].display) infoDiv.append(p);
+        }
+    }
 
     if(object.flavorText != undefined){
-        infoDiv.append(document.createElement('br'));
+        let p = document.createElement('p');
+        let flavorText = document.createElement('em');
+        if (infoDiv.childElementCount != 0) infoDiv.append(document.createElement('br'));
         flavorText.textContent = object.flavorText;
         p.append(flavorText);
         infoDiv.append(p);
@@ -80,6 +88,60 @@ function infoDivIn(object, parent){
 function infoDivOut(){
     let infoDiv = document.getElementById('infoDiv');
     infoDiv.remove();
+}
+
+function itemButton(object){
+    let buttonContainer = document.createElement('div');
+    let button = document.createElement('div');
+    let p = document.createElement('p');
+
+    buttonContainer.setAttribute("class", "itemSpace");
+    button.setAttribute("class", "item");
+    p.setAttribute("id", `${object.name}`);
+    p.setAttribute("class", object.constructor.name);
+    if (object.constructor.name == Building.name || object.constructor.name == StorageBuilding.name){
+        p.textContent = `${object.name}: ${object.stk}`;
+    }
+    else if (object.constructor.name == Research.name){
+        p.textContent = `${object.name}`;
+        if(object.purchased == true) button.style.backgroundColor = "rgb(60,5,5)";
+    }
+    else if (object.constructor.name == Machine.name){
+        p.textContent = `${object.name}: ${object.stk}/${object.maxStk}`;
+    }
+    else{
+        p.textContent = `${object.name}`;
+    }
+
+    button.append(p);
+    buttonContainer.append(button);
+    
+    if(object.constructor.name == Machine.name){
+        let switchDiv = document.createElement('div');
+        switchDiv.setAttribute("class", "switchDiv");
+
+        let switchOn = document.createElement('div');
+        switchOn.setAttribute("class", "switchOn");
+        switchOn.setAttribute("id", `switchOn${object.name}`)
+        let switchTextPlus = document.createElement('p');
+        switchTextPlus.textContent = "+ ";
+        switchOn.addEventListener('click', switchOn.ev = PlayerMethod.turnOn.bind(this, object)); // Storing the event listener locally so I can REMOVE IT LATER
+        object.eventListenerCheck = true;
+
+        let switchOff = document.createElement('div');
+        switchOff.setAttribute("class", "switchOff");
+        let switchTextMinus = document.createElement('p');
+        switchTextMinus.textContent = " -";
+        switchOff.addEventListener('click', PlayerMethod.turnOff.bind(this, object));
+
+        switchOn.append(switchTextPlus);
+        switchOff.append(switchTextMinus);
+        switchDiv.append(switchOn);
+        switchDiv.append(switchOff);
+        buttonContainer.append(switchDiv);
+    }
+
+    return buttonContainer;
 }
 
 function insertButton(object, method){
@@ -95,46 +157,68 @@ function insertButton(object, method){
 }
 
 /**
- * CONSTRUCTION MENU
+ * OUTPOST MENU
  */
 
-export function createConstructionMenu(){
-    if (currentMenu != "Construction") return;
+export function createOutpostMenu(){
+    if (currentMenu != "Outpost") return;
+    updateBuildingConditions();
     DOM.gameButtonsDiv.style.flexFlow = "row wrap";
-    let count = DOM.gameButtonsDiv.childElementCount;
-    for(count; count < Buildings.buildingArray.length; count++){
+    if(document.getElementById("Scavenge Wasteland") == null) insertButton(Buildings.Scavenge, Buildings.Scavenge.interact.bind(Buildings.Scavenge));
+    for(let count = 0; count < Buildings.buildingArray.length; count++){
         let building = Buildings.buildingArray[count];
-        if(building.display == true && building.unlocked == true){
-            insertButton(building, Player.purchaseBuilding.bind(building));
+        if(building.display == true && building.unlocked == true && document.getElementById(`${building.name}`) == null){
+            insertButton(building, PlayerMethod.purchaseBuilding.bind(building));
         }
     }
-    updateConstructionMenu();
+    updateOutpostMenu();
 }
 
-function updateBuildingConditions(){
-    let count = DOM.gameButtonsDiv.childElementCount;
-    for(count; count < Buildings.buildingArray.length; count++){
-        let building = Buildings.buildingArray[count];
+function disableOrEnableButtons(){
+    for(let i = 0; i < Buildings.buildingArray.length; i++){
+        let building = Buildings.buildingArray[i];
         let costCounter = 0;
-        for(let i in building.cost){
-            if(building.cost[i][0] * 0.35 <= Player[i][0]){
+        for(let j in building.cost){
+            if (Player[j].amount >= building.cost[j].amount){
                 costCounter++;
             }
         }
         if(costCounter == Object.keys(building.cost).length){
-            building.display = true;
-            if(building.unlocked == true){
-                createConstructionMenu();
+            let p = document.getElementById(building.name);
+            if (p != null){
+                let parent = p.parentNode;
+                p.style.color = "white";
+                parent.style.backgroundColor = "rgb(90,0,0)";
+            }
+        }
+        else{
+            let p = document.getElementById(building.name);
+            if (p != null){
+                let parent = p.parentNode;
+                p.style.color = "lightgrey";
+                parent.style.backgroundColor = "rgb(60,5,5)";
             }
         }
     }
 }
 
-function updateConstructionMenu(){
-    if (currentMenu == "Construction" && constructionCheck == false){
-        constructionCheck = true;
-        researchCheck = false;
-        setInterval(updateBuildingConditions, timeInterval);
+function updateBuildingConditions(){
+
+    disableOrEnableButtons();
+
+    for(let count = 0; count < Buildings.buildingArray.length; count++){
+        let building = Buildings.buildingArray[count];
+        if(building.unlocked == true){
+            building.display = true;
+        }
+    }
+}
+
+function updateOutpostMenu(){
+    if (currentMenu == "Outpost" && outpostCheck == false){
+        updateCheck();
+        outpostCheck = true;
+        setInterval(createOutpostMenu, timeInterval);
     }
 }
 
@@ -146,17 +230,30 @@ export function createResourceMenu(){
     for(let i in Player){
         if(typeof Player[i] == typeof Player){
             let p = document.createElement('p');
-            p.setAttribute("id", Player[i][1]);
-            DOM.leftDiv.append(p);
+            p.setAttribute("id", Player[i].label);
+            p.setAttribute("class", "Resource");
+            if(Player[i].display == true) DOM.leftDiv.append(p);
         }
     }
 }
 
+function convertNotation(number){
+    if (number >= 100000) return number.toExponential(3);
+    else return number.toFixed(2);
+}
+
 function updateResources(){
     for(let i in Player){
-        if(typeof Player[i] == typeof Player){
-            let p = document.getElementById(`${Player[i][1]}`);
-            p.innerText = `${Player[i][1]}: ${Player[i][0].toFixed(2)}`;
+        if(typeof Player[i] == typeof Player && Player[i].display){
+            let p = document.getElementById(`${Player[i].label}`);
+            let displayAmount = Player[i].amount;
+            let displayLimit = Player[i].limit;
+
+            displayAmount = convertNotation(displayAmount);
+            displayLimit = convertNotation(displayLimit);
+
+            p.innerText = `${Player[i].label}: ${displayAmount} / ${displayLimit}`;
+            createResourceMenu();
         }
     }
 }
@@ -180,6 +277,7 @@ function insertMenuItem(text, method){
     let menuItem = document.createElement('div');
     menuItem.setAttribute("class", "gameMenuItem");
     let p = document.createElement('p');
+    p.setAttribute("id", `${text}`);
     p.textContent = text;
 
     menuItem.addEventListener('click', () => {currentMenu = p.textContent});
@@ -191,12 +289,16 @@ function insertMenuItem(text, method){
 }
 
 export function createGameMenu(){
-    insertMenuItem("Construction", createConstructionMenu);
-    insertMenuItem("Research", createResearchMenu);
+    for(let count in DOM.menuArray){
+        let p = document.getElementById(`${DOM.menuArray[count].label}`);
+        if (DOM.menuArray[count].display == true && p == null){
+            insertMenuItem(DOM.menuArray[count].label, DOM.menuArray[count].method);
+        }
+    }
 }
 
 export function updateGameMenu(){
-
+    setInterval(createGameMenu, timeInterval);
 }
 
 /**
@@ -210,7 +312,7 @@ function createResearchMenu(){
         let research = Techs.researchArray[count];
         let p = document.getElementById(research.name);
         if(research.display == true && research.unlocked == true && p == null){
-            insertButton(research, Player.purchaseTechnology.bind(research));
+            insertButton(research, PlayerMethod.purchaseTechnology.bind(research));
         }
     }
     updateResearchMenu();
@@ -219,14 +321,8 @@ function createResearchMenu(){
 function updateResearchConditions(){
     for(let count = 0; count < Techs.researchArray.length; count++){
         let research = Techs.researchArray[count];
-        let costCounter = 0;
-        for(let i in research.cost){
-            if(research.cost[i][0] * 0.35 <= Player[i][0]){
-                costCounter++;
-            }
-        }
         let p = document.getElementById(research.name);
-        if(costCounter == Object.keys(research.cost).length && research.unlocked == true && p == null){
+        if(research.unlocked == true && p == null){
             research.display = true;
             createResearchMenu();
         }
@@ -235,8 +331,44 @@ function updateResearchConditions(){
 
 function updateResearchMenu(){
     if(currentMenu == "Research" && researchCheck == false){
+        updateCheck();
         researchCheck = true;
-        constructionCheck = false;
         setInterval(updateResearchConditions, timeInterval);
+    }
+}
+
+/**
+ * STORAGE MENU
+ */
+
+function createStorageMenu(){
+    if (currentMenu != "Storage") return;
+    updateStorageConditions();
+    DOM.gameButtonsDiv.style.flexFlow = "row wrap";
+    for(let count = 0; count < Buildings.storageArray.length; count++){
+        let building = Buildings.storageArray[count];
+        if(building.display == true && building.unlocked == true && document.getElementById(`${building.name}`) == null){
+            insertButton(building, PlayerMethod.purchaseBuilding.bind(building));
+        }
+    }
+    updateStorageMenu();
+}
+
+function updateStorageConditions(){
+    disableOrEnableButtons();
+
+    for(let count = 0; count < Buildings.storageArray.length; count++){
+        let building = Buildings.storageArray[count];
+        if(building.unlocked == true){
+            building.display = true;
+        }
+    }
+}
+
+function updateStorageMenu(){
+    if(currentMenu == "Storage" && storageCheck == false){
+        updateCheck();
+        storageCheck = true;
+        setInterval(createStorageMenu, timeInterval);
     }
 }

@@ -5,7 +5,6 @@ function startGame(){
     DOMAssets.updateGameMenu();
     DOMAssets.createResourceMenu();
     DOMAssets.updateResourceMenu();
-    DOMAssets.createConstructionMenu();
+    DOMAssets.createOutpostMenu();
 }
-
 startGame();

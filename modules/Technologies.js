@@ -1,107 +1,128 @@
-import { Cost, Research } from './Classes.js';
+import { Research, ResourceList } from './Classes.js';
 import * as Buildings from './Buildings.js';
+import { Player } from './PlayerInv.js';
+import * as DOM from './HTMLObjects.js';
 
-let CopperMiningCost = new Cost(50, 0, 0);
-let ImprovedIronMinesCost = new Cost(0, 150, 0);
-let CheaperIronMinesCost = new Cost(150, 200, 0);
-let TitaniumMiningCost = new Cost(300, 200, 0);
-let CoreMiningCost = new Cost(1500, 2000, 500);
+let ScavengerDroneTechCost = new ResourceList(35, 0, 0, 0, 0);
+let DiggingCost = new ResourceList(50, 0, 0, 0, 0);
+let MiningDroneMkITechCost = new ResourceList(150, 0, 0, 0, 0);
+let SmeltingCost = new ResourceList(0, 50, 0, 0, 0);
+let BasicElectrolysisCost = new ResourceList(0, 0, 75, 0, 0);
+let MiningDroneMkIICost = new ResourceList(250, 0, 100, 0, 0);
+
 
 /**
  * METHODS~
  */
 
-let CopperMiningMethod = function(){
+let ScavengerDroneTechMethod = function(){
     this.purchased = true;
-    Buildings.CopperMine.unlocked = true;
-    ImprovedIronMines.unlock();
-    CheaperIronMines.unlock();
-    TitaniumMining.unlock();
+    Buildings.ScavengerDrone.unlocked = true;
+    MiningDroneMkITech.unlock();
     this.disableButton();
 }
 
-let CopperMiningUnlock = function(){
+let DiggingMethod = function(){
+    this.purchased = true;
+    Buildings.Pit.unlocked = true;
+    DOM.menuArray.storage.display = true;
+    MiningDroneMkITech.unlock();
+    this.disableButton();
+}
+
+let MiningDroneMkITechMethod = function(){
+    this.purchased = true;
+    Buildings.MiningDroneMkI.unlocked = true;
+    Player.ironOre.display = true;
+    Smelting.unlock();
+    this.disableButton();
+}
+
+let SmeltingMethod = function(){
+    this.purchased = true;
+    Buildings.Smelter.unlocked = true;
+    Player.iron.display = true;
+    BasicElectrolysis.unlock();
+    this.disableButton();
+}
+
+let BasicElectrolysisMethod = function(){
+    this.purchased = true;
+    Buildings.Electrolyzer.unlocked = true;
+    MiningDroneMkII.unlock();
+    this.disableButton();
+}
+
+let MiningDroneMkIIMethod = function(){
+    this.purchased = true;
+    Buildings.buildingArray[1] = Buildings.MiningDroneMkII;
+    Player.copperOre.display = true;
+    Buildings.MiningDroneMkII.unlocked = true;  
+    this.disableButton();
+}
+
+/**
+ * UNLOCKS~
+ */
+
+let ScavengerDroneTechUnlock = function(){
     this.unlocked = true;
 }
 
-let ImprovedIronMinesMethod = function(){
-    this.purchased = true;
-    Buildings.IronMine.prodRate.ironOre[0] += 0.1;
-    CheaperIronMines.unlock();
-    this.disableButton();
+let DiggingUnlock = function(){
+    this.unlocked = true;
 }
 
-let ImprovedIronMinesUnlock = function(){
-    if (CopperMining.purchased == true){
+let MiningDroneMkITechUnlock = function(){
+    if (Digging.purchased && ScavengerDroneTech.purchased){
+        this.unlocked = true;
+    }
+}
+
+let SmeltingUnlock = function(){
+    this.unlocked = true;
+}
+
+let BasicElectrolysisUnlock = function(){
+    this.unlocked = true;
+}
+
+let MiningDroneMkIIUnlock = function(){
+    if (Smelting.purchased == true){
         this.unlocked = true;
     };
-}
-
-let CheaperIronMinesMethod = function(){
-    this.purchased = true;
-    Buildings.IronMine.costRate = (Buildings.IronMine.costRate - 0.01).toFixed(2);
-    Buildings.IronMine.recalculateCost();
-    this.disableButton();
-}
-
-let CheaperIronMinesUnlock = function(){
-    if (CopperMining.purchased && TitaniumMining.purchased && ImprovedIronMines.purchased){
-        this.unlocked = true;
-    }
-}
-
-let TitaniumMiningMethod = function(){
-    Buildings.TitaniumMine.unlocked = true;
-    this.purchased = true;
-    CoreMining.unlocked = true;
-    CheaperIronMines.unlock();
-    CoreMining.unlock();
-    this.disableButton();
-}
-
-let TitaniumMiningUnlock = function(){
-    if (CopperMining.unlocked){
-        this.unlocked = true;
-    }
-}
-
-let CoreMiningMethod = function(){
-    Buildings.CoreDrill.unlocked = true;
-    this.purchased = true;
-    this.disableButton();
-}
-
-let CoreMiningUnlock = function(){
-    if (TitaniumMining.purchased){
-        this.unlocked = true;
-    }
 }
 
 /**
  * FLAVOR TEXT~
  */
 
-let CopperMiningFlavorText = "This new mineral should open new doors.";
-let TitaniumMiningFlavorText = "Precious and shiny, but most importantly: strong.";
-let CoreMiningFlavorText = "They dug too greedily and too deep. You know what they awoke in the darkness of Khazad-dûm.";
+let ScavengerDroneTechFlavorText = "Not as efficient as you, but they eventually get the job done."
+let DiggingFlavorText = "Nowhere to go but down.";
+let MiningDroneMkITechFlavorText = "Slightly bigger than your scavenger drones. Careful around the makeshift drill!";
+let SmeltingFlavorText = "Refine your newly acquired Iron Ore.";
+let BasicElectrolysisFlavorText = "Turn the scrap metal into something more useful.";
 
 /**
  * TECHS
  */
 
-let CopperMining = new Research('Copper Mining', CopperMiningCost, true, true,
-                                CopperMiningMethod, CopperMiningUnlock, CopperMiningFlavorText);
+let ScavengerDroneTech = new Research('Scavenger Drones', ScavengerDroneTechCost, true, true,
+ScavengerDroneTechMethod, ScavengerDroneTechUnlock, ScavengerDroneTechFlavorText);
 
-let ImprovedIronMines = new Research('Improved Iron Mines', ImprovedIronMinesCost, false, false,
-                                ImprovedIronMinesMethod, ImprovedIronMinesUnlock, undefined);
+let Digging = new Research('Digging', DiggingCost, true, true,
+DiggingMethod, DiggingUnlock, DiggingFlavorText);
 
-let CheaperIronMines = new Research('Cheaper Iron Mines', CheaperIronMinesCost, false, false,
-                                CheaperIronMinesMethod, CheaperIronMinesUnlock, undefined);
+let MiningDroneMkITech = new Research('Mining Drones Mk. I', MiningDroneMkITechCost, false, false,
+MiningDroneMkITechMethod, MiningDroneMkITechUnlock, MiningDroneMkITechFlavorText);
 
-let TitaniumMining = new Research('Titanium Mining', TitaniumMiningCost, false, false,
-                                TitaniumMiningMethod, TitaniumMiningUnlock, TitaniumMiningFlavorText);
+let Smelting = new Research('Smelting', SmeltingCost, false, false,
+SmeltingMethod, SmeltingUnlock, SmeltingFlavorText);
 
-let CoreMining = new Research('Core Mining', CoreMiningCost, false, false,
-                                CoreMiningMethod, CoreMiningUnlock, CoreMiningFlavorText);
+let BasicElectrolysis = new Research('Basic Electrolysis', BasicElectrolysisCost, false, false,
+BasicElectrolysisMethod, BasicElectrolysisUnlock, BasicElectrolysisFlavorText);
+
+let MiningDroneMkII = new Research('Mining Drones Mk. II', MiningDroneMkIICost, false, false,
+MiningDroneMkIIMethod, MiningDroneMkIIUnlock, undefined);
                                 
-export let researchArray = [CopperMining, ImprovedIronMines, TitaniumMining, CheaperIronMines, CoreMining];
+export let researchArray = [ScavengerDroneTech, Digging, MiningDroneMkITech, Smelting, BasicElectrolysis, MiningDroneMkII];
