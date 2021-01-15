@@ -59,7 +59,7 @@ let WarehouseFlavorText = "Consider this an improvement."
  * BUILDINGS
  */
 
-export let ScavengerDrone = new Building('Scavenger Drone', 0, ScavengerDroneProdRate, ScavengerDroneCost, ScavengerDroneCostBase,
+export let ScavengerDrone = new Building('Scavenger Drone', 100, ScavengerDroneProdRate, ScavengerDroneCost, ScavengerDroneCostBase,
 1.011, false, false, ScavengerDroneFlavorText);
 export let MiningDroneMkI = new Building('Mining Drone Mk. I', 0, MiningDroneMkIProdRate, MiningDroneMkICost, MiningDroneMkICostBase,
 1.15, false, false, MiningDroneMkIFlavorText);

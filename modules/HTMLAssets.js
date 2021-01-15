@@ -232,7 +232,16 @@ export function createResourceMenu(){
             let p = document.createElement('p');
             p.setAttribute("id", Player[i].label);
             p.setAttribute("class", "Resource");
-            if(Player[i].display == true) DOM.leftDiv.append(p);
+
+            let displayAmount = Player[i].amount;
+            let displayLimit = Player[i].limit;
+
+            displayAmount = convertNotation(displayAmount);
+            displayLimit = convertNotation(displayLimit);
+
+            p.innerText = `${Player[i].label}: ${displayAmount} / ${displayLimit}`;
+
+            if(Player[i].display == true && !document.getElementById(`${Player[i].label}`)) DOM.leftDiv.append(p);
         }
     }
 }
@@ -246,16 +255,18 @@ function updateResources(){
     for(let i in Player){
         if(typeof Player[i] == typeof Player && Player[i].display){
             let p = document.getElementById(`${Player[i].label}`);
-            let displayAmount = Player[i].amount;
-            let displayLimit = Player[i].limit;
-
-            displayAmount = convertNotation(displayAmount);
-            displayLimit = convertNotation(displayLimit);
-
-            p.innerText = `${Player[i].label}: ${displayAmount} / ${displayLimit}`;
-            createResourceMenu();
+            if (p != null){
+                let displayAmount = Player[i].amount;
+                let displayLimit = Player[i].limit;
+    
+                displayAmount = convertNotation(displayAmount);
+                displayLimit = convertNotation(displayLimit);
+    
+                p.innerText = `${Player[i].label}: ${displayAmount} / ${displayLimit}`;
+            }
         }
     }
+    createResourceMenu();
 }
 
 export function updateResourceMenu(){
