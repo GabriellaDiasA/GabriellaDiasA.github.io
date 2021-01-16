@@ -7,7 +7,7 @@ import { Player } from './PlayerInv.js';
  */
 
 let ScavengerDroneCost = new ResourceList(15, 0, 0, 0, 0);
-let MiningDroneMkICost = new ResourceList(100, 0, 0, 0, 0);
+let MiningDroneMkICost = new ResourceList(70, 0, 0, 0, 0);
 let MiningDroneMkIICost = new ResourceList(125, 0, 25, 0, 0);
 let SmelterCost = new ResourceList(150, 100, 0, 0, 0);
 let ElectrolyzerCost = new ResourceList(0, 0, 50, 0, 0);
@@ -18,10 +18,10 @@ let MiningDroneMkIICostBase = new ResourceList(125, 0, 25, 0, 0);
 let SmelterCostBase = new ResourceList(150, 100, 0, 0, 0);
 let ElectrolyzerCostBase = new ResourceList(0, 0, 50, 0, 0);
 
-let ScavengerDroneProdRate = new ResourceList(0.15, 0, 0, 0, 0);
+let ScavengerDroneProdRate = new ResourceList(0.3, 0, 0, 0, 0);
 let MiningDroneMkIProdRate = new ResourceList(0, 0.2, 0, 0, 0);
 let MiningDroneMkIIProdRate = new ResourceList(0, 0.3, 0, 0.1, 0);
-let SmelterProdRate = new ResourceList(0, -5, 0.1, 0, 0);
+let SmelterProdRate = new ResourceList(0, -1, 0.1, 0, 0);
 let ElectrolyzerProdRate = new ResourceList(-4, 0, 0.05, 0, 0);
 
 /**
@@ -59,11 +59,11 @@ let WarehouseFlavorText = "Consider this an improvement."
  * BUILDINGS
  */
 
-export let ScavengerDrone = new Building('Scavenger Drone', 100, ScavengerDroneProdRate, ScavengerDroneCost, ScavengerDroneCostBase,
-1.011, false, false, ScavengerDroneFlavorText);
+export let ScavengerDrone = new Building('Scavenger Drone', 0, ScavengerDroneProdRate, ScavengerDroneCost, ScavengerDroneCostBase,
+1.05, false, false, ScavengerDroneFlavorText);
 export let MiningDroneMkI = new Building('Mining Drone Mk. I', 0, MiningDroneMkIProdRate, MiningDroneMkICost, MiningDroneMkICostBase,
 1.15, false, false, MiningDroneMkIFlavorText);
-export let MiningDroneMkII = new Building('Mining Drone Mk. II', 0, MiningDroneMkIIProdRate, MiningDroneMkIICost, MiningDroneMkIICostBase,
+export let MiningDroneMkII = new Building('Mining Drone Mk. II', 1, MiningDroneMkIIProdRate, MiningDroneMkIICost, MiningDroneMkIICostBase,
 1.15, false, false, MiningDroneMkIIFlavorText);
 export let Smelter = new Machine('Smelter', 0, 0, SmelterProdRate, SmelterCost, SmelterCostBase,
 1.15, false, false, SmelterFlavorText);
