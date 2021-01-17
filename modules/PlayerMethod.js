@@ -2,7 +2,6 @@ import * as Buildings from './Buildings.js';
 import { Player } from './PlayerInv.js';
 import { timeInterval } from './constants.js';
 import { calculateNetProduction, productionList } from './utils.js';
-import { currentMenu } from './HTMLAssets.js';
 import { StorageBuilding } from './Classes.js';
 
 export let PlayerMethod = {
@@ -34,6 +33,16 @@ export let PlayerMethod = {
     },
 
     purchaseTechnology: function(){
+        if(this.purchased == true) return;
+        if(PlayerMethod.checkCost(this) == true){
+            for(let i in this.cost){
+                Player[i].amount -= this.cost[i].amount;
+            }
+            this.method();
+        }
+    },
+
+    purchaseUpgrade: function(){
         if(this.purchased == true) return;
         if(PlayerMethod.checkCost(this) == true){
             for(let i in this.cost){

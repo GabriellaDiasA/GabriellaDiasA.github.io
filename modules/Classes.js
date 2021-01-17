@@ -11,6 +11,7 @@ export class Building{
         this.display = display;
         this.unlocked = unlocked;
         this.flavorText = flavorText;
+        this.bonusProd = 1;
     }
 
     updateButtonText(){
@@ -33,23 +34,25 @@ export class Building{
 
     recalculateCost(){
         for(let i in this.cost){
-            this.cost[i].amount = (this.baseCost[i].amount * (this.costRate ** (this.stk-1)));
+            this.cost[i].amount = (this.baseCost[i].amount * (this.costRate ** this.stk));
         }
     }
 }
 
 export class ResourceList{
-    constructor(scrap, ironOre, iron, copperOre, titaniumOre){
+    constructor(scrap, ironOre, iron, copperOre, copper, quartz, silicon){
         this.scrap = {amount: scrap, label: "Scrap"};
         this.ironOre = {amount: ironOre, label: "Iron Ore"};
         this.iron = {amount: iron, label: "Iron"};
         this.copperOre = {amount: copperOre, label: "Copper Ore"};
-        this.titaniumOre = {amount: titaniumOre, label: "Titanium Ore"};
+        this.copper = {amount: copper, label: "Copper"};
+        this.quartz = {amount: quartz, label: "Quartz"};
+        this.silicon = {amount: silicon, label: "Silicon"};
     }
 }
 
 export class Research{
-    constructor(name, cost, display, unlocked, method, unlockMethod, flavorText){
+    constructor(name, cost, display, unlocked, method, unlockMethod, flavorText, effectsText){
         this.name = name;
         this.cost = cost;
         this.display = display;
@@ -57,6 +60,7 @@ export class Research{
         this.method = method;
         this.unlock = unlockMethod;
         this.flavorText = flavorText;
+        this.effectsText = effectsText;
         this.purchased = false;
     }
 
@@ -94,4 +98,8 @@ export class StorageBuilding extends Building{
 }
 
 export class LimitIncrease extends ResourceList{
+}
+
+export class Upgrade extends Research{
+
 }

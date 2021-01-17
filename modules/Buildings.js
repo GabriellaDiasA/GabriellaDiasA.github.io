@@ -6,23 +6,26 @@ import { Player } from './PlayerInv.js';
  * Scrap, Iron Ore, Iron, Copper Ore, Titanium Ore
  */
 
-let ScavengerDroneCost = new ResourceList(15, 0, 0, 0, 0);
-let MiningDroneMkICost = new ResourceList(70, 0, 0, 0, 0);
-let MiningDroneMkIICost = new ResourceList(125, 0, 25, 0, 0);
-let SmelterCost = new ResourceList(150, 100, 0, 0, 0);
-let ElectrolyzerCost = new ResourceList(0, 0, 50, 0, 0);
+let ScavengerDroneCost = new ResourceList(15, 0, 0, 0, 0, 0, 0);
+let MiningDroneMkICost = new ResourceList(70, 0, 0, 0, 0, 0, 0);
+let MiningDroneMkIICost = new ResourceList(125, 0, 5, 0, 0, 0, 0);
+let SmelterCost = new ResourceList(150, 100, 0, 0, 0, 0, 0);
+let ElectrolyzerCost = new ResourceList(400, 0, 30, 0, 0, 0, 0);
+let CrudeProcessorCost = new ResourceList(150, 0, 100, 0, 85, 350, 0);
 
-let ScavengerDroneCostBase = new ResourceList(15, 0, 0, 0, 0);
-let MiningDroneMkICostBase = new ResourceList(0, 10, 0, 0, 0);
-let MiningDroneMkIICostBase = new ResourceList(125, 0, 25, 0, 0);
-let SmelterCostBase = new ResourceList(150, 100, 0, 0, 0);
-let ElectrolyzerCostBase = new ResourceList(0, 0, 50, 0, 0);
+let ScavengerDroneCostBase = new ResourceList(15, 0, 0, 0, 0, 0, 0);
+let MiningDroneMkICostBase = new ResourceList(70, 0, 0, 0, 0, 0, 0);
+let MiningDroneMkIICostBase = new ResourceList(125, 0, 5, 0, 0, 0, 0);
+let SmelterCostBase = new ResourceList(150, 100, 0, 0, 0, 0, 0);
+let ElectrolyzerCostBase = new ResourceList(400, 0, 30, 0, 0, 0, 0);
+let CrudeProcessorCostBase = new ResourceList(150, 0, 100, 0, 85, 350, 0);
 
-let ScavengerDroneProdRate = new ResourceList(0.3, 0, 0, 0, 0);
-let MiningDroneMkIProdRate = new ResourceList(0, 0.2, 0, 0, 0);
-let MiningDroneMkIIProdRate = new ResourceList(0, 0.3, 0, 0.1, 0);
-let SmelterProdRate = new ResourceList(0, -1, 0.1, 0, 0);
-let ElectrolyzerProdRate = new ResourceList(-4, 0, 0.05, 0, 0);
+let ScavengerDroneProdRate = new ResourceList(0.3, 0, 0, 0, 0, 0, 0);
+let MiningDroneMkIProdRate = new ResourceList(0, 0.2, 0, 0, 0, 0, 0);
+let MiningDroneMkIIProdRate = new ResourceList(0, 0.8, 0, 0.1, 0, 0, 0);
+let SmelterProdRate = new ResourceList(0, -1, 0.1, 0, 0, 0, 0);
+let ElectrolyzerProdRate = new ResourceList(-4, 0, 0.05, 0, 0, 0, 0);
+let CrudeProcessorProdRate = new ResourceList(0, 0, 0, 0, 0, 0, 0);
 
 /**
  * FLAVOR TEXT~
@@ -33,34 +36,39 @@ let MiningDroneMkIFlavorText = "They use meteor impact sites as makeshift quarri
 let MiningDroneMkIIFlavorText = "Bigger, faster, stronger";
 let SmelterFlavorText = "Hot!";
 let ElectrolyzerFlavorText = "Shocking!";
+let CrudeProcessorFlavorText = undefined;
 
 /**
  * STORAGE BUILDING COSTS AND EFFECTS
  * Scrap, Iron Ore, Iron, Copper Ore, Titanium Ore
  */
 
-let PitCost = new ResourceList(50, 0, 0, 0, 0);
-let WarehouseCost = new ResourceList(250, 0, 50, 0, 0);
+let PitCost = new ResourceList(50, 0, 0, 0, 0, 0, 0);
+let WarehouseCost = new ResourceList(250, 0, 50, 0, 0, 0, 0);
+let SiloCost = new ResourceList(0, 0, 500, 0, 300, 0, 0);
 
-let PitCostBase = new ResourceList(50, 0, 0, 0, 0);
-let WarehouseCostBase = new ResourceList(250, 0, 50, 0, 0);
+let PitCostBase = new ResourceList(50, 0, 0, 0, 0, 0, 0);
+let WarehouseCostBase = new ResourceList(250, 0, 50, 0, 0, 0, 0);
+let SiloCostBase = new ResourceList(0, 0, 500, 0, 300, 0, 0);
 
-let PitEffect = new ResourceList(200, 150, 25, 150, 50);
-let WarehouseEffect = new ResourceList(250, 250, 150, 250, 150);
+let PitEffect = new ResourceList(500, 150, 15, 150, 50, 200, 0);
+let WarehouseEffect = new ResourceList(50, 100, 400, 100, 350, 0, 25);
+let SiloEffect = new ResourceList(1500, 1200, 0, 1200, 0, 1400, 0);
 
 /**
  * STORAGE FLAVOR~
  */
 
 let PitFlavorText = "I guess you could do that...";
-let WarehouseFlavorText = "Consider this an improvement."
+let WarehouseFlavorText = "Consider this an improvement.";
+let SiloFlavorText = "Great for storing crude materials.";
 
 /**
  * BUILDINGS
  */
 
 export let ScavengerDrone = new Building('Scavenger Drone', 0, ScavengerDroneProdRate, ScavengerDroneCost, ScavengerDroneCostBase,
-1.05, false, false, ScavengerDroneFlavorText);
+1.06, false, false, ScavengerDroneFlavorText);
 export let MiningDroneMkI = new Building('Mining Drone Mk. I', 0, MiningDroneMkIProdRate, MiningDroneMkICost, MiningDroneMkICostBase,
 1.15, false, false, MiningDroneMkIFlavorText);
 export let MiningDroneMkII = new Building('Mining Drone Mk. II', 1, MiningDroneMkIIProdRate, MiningDroneMkIICost, MiningDroneMkIICostBase,
@@ -69,20 +77,24 @@ export let Smelter = new Machine('Smelter', 0, 0, SmelterProdRate, SmelterCost, 
 1.15, false, false, SmelterFlavorText);
 export let Electrolyzer = new Machine('Electrolyzer', 0, 0, ElectrolyzerProdRate, ElectrolyzerCost, ElectrolyzerCostBase,
 1.17, false, false, ElectrolyzerFlavorText);
+export let CrudeProcessor = new Machine('Crude Processor', 0, 0, CrudeProcessorProdRate, CrudeProcessorCost, CrudeProcessorCostBase,
+2.25, false, false, CrudeProcessorFlavorText);
 
 // Only PRODUCTION buildings here, please.
-export let buildingArray = [ScavengerDrone, MiningDroneMkI, Smelter, Electrolyzer];
+export let buildingArray = [ScavengerDrone, MiningDroneMkI, Smelter, Electrolyzer, CrudeProcessor];
 
 /**
  * STORAGE BUILDINGS
  */
 
 export let Pit = new StorageBuilding('Pit', 0, PitEffect, PitCost, PitCostBase,
-1.25, false, false, PitFlavorText);
+1.5, false, false, PitFlavorText);
 export let Warehouse = new StorageBuilding('Warehouse', 0, WarehouseEffect, WarehouseCost, WarehouseCostBase,
-1.3, false, false, WarehouseFlavorText);
+1.2, false, false, WarehouseFlavorText);
+export let Silo = new StorageBuilding('Silo', 0, SiloEffect, SiloCost, SiloCostBase,
+1.4, false, false, SiloFlavorText);
 
-export let storageArray = [Pit, Warehouse];
+export let storageArray = [Pit, Warehouse, Silo];
 
 /**
  * SCAVENGE WASTELAND
@@ -94,5 +106,67 @@ export let Scavenge = {
 
     interact: function(){
         if(Player.scrap.amount < Player.scrap.limit) Player.scrap.amount++;
+    }
+}
+
+/**
+ * LOCAL STORAGE
+ */
+
+export function loadBuildingArray(){
+    if(!localStorage.getItem(`${buildingArray[0].name}`)){
+        setInterval(setBuildings, 500);
+    }
+    else{
+        getBuildings();
+        setInterval(setBuildings, 500);
+    }
+}
+
+function setBuildings(){
+    for(let building in buildingArray){
+        let tempObj = {};
+        for(let property in buildingArray[building]){
+            tempObj[property] = buildingArray[building][property];
+        }
+        localStorage.setItem(`${buildingArray[building].name}`, JSON.stringify(tempObj));
+    }
+}
+
+function getBuildings(){
+    for(let building in buildingArray){
+        let tempObj = JSON.parse(localStorage.getItem(`${buildingArray[building].name}`));
+        for(let property in buildingArray[building]){
+            buildingArray[building][property] = tempObj[property];
+        }
+    }
+}
+
+export function loadStorageArray(){
+    if(!localStorage.getItem(`${storageArray[0].name}`)){
+        setInterval(setStorage, 500);
+    }
+    else{
+        getStorage();
+        setInterval(setStorage, 500);
+    }
+}
+
+function setStorage(){
+    for(let building in storageArray){
+        let tempObj = {};
+        for(let property in storageArray[building]){
+            tempObj[property] = storageArray[building][property];
+        }
+        localStorage.setItem(`${storageArray[building].name}`, JSON.stringify(tempObj));
+    }
+}
+
+function getStorage(){
+    for(let building in storageArray){
+        let tempObj = JSON.parse(localStorage.getItem(`${storageArray[building].name}`));
+        for(let property in storageArray[building]){
+            storageArray[building][property] = tempObj[property];
+        }
     }
 }

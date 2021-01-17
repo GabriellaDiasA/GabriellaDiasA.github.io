@@ -6,16 +6,42 @@ export const rightDiv = document.getElementById('rightDiv');
 export const gameButtonsDiv = document.getElementById('gameButtonsDiv');
 export const gameMenu = document.getElementById('gameMenu');
 
-export let outpostMenu = {
+let outpostMenu = {
     label: "Outpost",
     display: true,
 }
-export let researchMenu = {
+let researchMenu = {
     label: "Research",
     display: true,
 }
-export let storageMenu = {
+let storageMenu = {
     label: "Storage",
     display: false,
 }
-export let menuArray = {outpost: outpostMenu, research: researchMenu, storage: storageMenu};
+let upgradesMenu = {
+    label: "Upgrades",
+    display: false,
+}
+
+export let menuArray = {outpost: outpostMenu, research: researchMenu, storage: storageMenu, upgrades: upgradesMenu};
+
+/**
+ * LOCAL STORAGE
+ */
+
+export function loadMenuArray(){
+    if(!localStorage.getItem('menuArray')){
+        setInterval(setMenuArray, 500);
+    }else{
+        getMenuArray();
+        setInterval(setMenuArray, 500);
+    }
+}
+
+function getMenuArray(){
+    menuArray = JSON.parse(localStorage.getItem('menuArray'));
+}
+
+function setMenuArray(){
+    localStorage.setItem('menuArray', JSON.stringify(menuArray));
+}

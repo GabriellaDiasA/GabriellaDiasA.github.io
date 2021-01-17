@@ -17,8 +17,11 @@ h1{
 }
 
 h3{
-    font-size: 18px;
+    font-size: 16px;
     color: white;
+}
+hr{
+    margin-bottom: 4px;
 }
 
 p{
@@ -130,6 +133,7 @@ p{
     flex-flow: row wrap;
     justify-content: flex-start;
     align-items: center;
+    padding-bottom: 40%;
 }
 
 .itemSpace {
@@ -163,21 +167,18 @@ p{
 }
 
 #infoDiv{
-    padding: 15px;
+    padding: 10px;
     display: inline;
     z-index: 2;
     position: absolute;
     min-height: 10px;
-    min-width: 10px;
+    min-width: 180px;
     height: auto;
     width: auto;
     max-width: 200px;
-    background-color: #453535;
+    background-color: #503535;
     border: 1px solid #403030;
-}
-
-em{
-    font-size: 11px;
+    border-radius: 4px;
 }
 
 .switchDiv{
@@ -211,6 +212,17 @@ span{
 .switchOff p{
     cursor: pointer;
     font-size: 16px;
+}
+
+.flavorText{
+    font-size: 11px;
+    font-style: italic;
+    text-align: left;
+}
+
+#infoText{
+    font-size: 13px;
+    text-align: right;
 }
 
 /* Webkit stuff */

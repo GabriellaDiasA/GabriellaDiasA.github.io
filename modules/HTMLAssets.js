@@ -1,41 +1,35 @@
 import * as DOM from './HTMLObjects.js';
-import { Building, Machine, Research, StorageBuilding } from './Classes.js';
+import { Building, Machine, Research, StorageBuilding, Upgrade } from './Classes.js';
 import * as Buildings from './Buildings.js';
 import * as Techs from './Technologies.js';
 import { Player } from './PlayerInv.js';
 import { PlayerMethod } from './PlayerMethod.js';
 import { timeInterval, yOffset } from './constants.js'
 import { productionList } from './utils.js';
+import * as Upgrades from './Upgrades.js';
 
 DOM.menuArray.outpost.method = createOutpostMenu;
 DOM.menuArray.research.method = createResearchMenu;
 DOM.menuArray.storage.method = createStorageMenu;
+DOM.menuArray.upgrades.method = createUpgradesMenu;
 
 export let currentMenu = "Outpost";
-let outpostCheck = false;
-let researchCheck = false;
-let storageCheck = false;
-
-function updateCheck(){
-    outpostCheck = false;
-    researchCheck = false;
-    storageCheck = false;
-}
 
 function infoDivIn(object, parent){
 
-    let y = parent.offsetTop;
+    let y = window.innerHeight - event.y;
     let x = parent.offsetLeft + parent.offsetWidth + 10;
     let infoDiv = document.createElement('div');
 
     infoDiv.setAttribute("id", "infoDiv");
-    infoDiv.style.top = y.toString() + "px";
+    infoDiv.style.bottom = y.toString() + "px";
     infoDiv.style.left = x.toString() + "px";
 
     if(object.name != 'Scavenge Wasteland'){
         let costTitle = document.createElement('h3');
         costTitle.textContent = "Costs :";
         infoDiv.append(costTitle);
+        infoDiv.append(document.createElement('hr'));
 
         for(let i in object.cost){
             let p = document.createElement('p');
@@ -50,11 +44,12 @@ function infoDivIn(object, parent){
         let prodTitle = document.createElement('h3');
         prodTitle.textContent = "Produces :";
         infoDiv.append(prodTitle);
+        infoDiv.append(document.createElement('hr'));
     
         for(let i in object.prodRate){
             let p = document.createElement('p');
             p.setAttribute("id", "infoText");
-            p.textContent = `${object.prodRate[i].label}: ${object.prodRate[i].amount}/s`;
+            p.textContent = `${object.prodRate[i].label}: ${(object.prodRate[i].amount * object.bonusProd).toFixed(2)}/s`;
             if(object.prodRate[i].amount != 0) infoDiv.append(p);
         }
     }
@@ -64,30 +59,51 @@ function infoDivIn(object, parent){
         let prodTitle = document.createElement('h3');
         prodTitle.textContent = "Expands :";
         infoDiv.append(prodTitle);
+        infoDiv.append(document.createElement('hr'));
     
         for(let resource in object.limitIncrease){
             let p = document.createElement('p');
             p.setAttribute("id", "infoText");
-            p.textContent = `${object.limitIncrease[resource].label}: ${object.limitIncrease[resource].amount}`;
+            p.textContent = `${object.limitIncrease[resource].label}: ${object.limitIncrease[resource].amount.toFixed(2)}`;
             if(object.limitIncrease[resource].amount != 0 && Player[resource].display) infoDiv.append(p);
+        }
+    }
+
+    if(object.constructor.name == Research.name || object.constructor.name == Upgrade.name){
+        infoDiv.append(document.createElement('br'));
+        let prodTitle = document.createElement('h3');
+        prodTitle.textContent = "Effects :";
+        infoDiv.append(prodTitle);
+        infoDiv.append(document.createElement('hr'));
+    
+        let p = document.createElement('p');
+        p.setAttribute("id", "infoText");
+        if (object.effectsText != undefined){
+            p.textContent = `${object.effectsText}`;
+            infoDiv.append(p);
         }
     }
 
     if(object.flavorText != undefined){
         let p = document.createElement('p');
-        let flavorText = document.createElement('em');
         if (infoDiv.childElementCount != 0) infoDiv.append(document.createElement('br'));
-        flavorText.textContent = object.flavorText;
-        p.append(flavorText);
+        p.textContent = object.flavorText;
+        p.setAttribute("class", "flavorText");
         infoDiv.append(p);
     }
-
+    let infoDivBackup = infoDiv;
     parent.append(infoDiv);
+    if(window.innerHeight - parseInt(infoDiv.style.bottom) - infoDiv.offsetHeight < 0){
+        let heightDifference = window.innerHeight - parseInt(infoDiv.style.bottom) - infoDiv.offsetHeight;
+        infoDiv.remove();
+        infoDivBackup.style.bottom = (parseInt(infoDivBackup.style.bottom) + heightDifference) + "px";
+        parent.append(infoDivBackup);
+    }
 }
 
 function infoDivOut(){
     let infoDiv = document.getElementById('infoDiv');
-    infoDiv.remove();
+    if(infoDiv != null) infoDiv.remove();
 }
 
 function itemButton(object){
@@ -171,12 +187,12 @@ export function createOutpostMenu(){
             insertButton(building, PlayerMethod.purchaseBuilding.bind(building));
         }
     }
-    updateOutpostMenu();
+    disableOrEnableButtons(Buildings.buildingArray);
 }
 
-function disableOrEnableButtons(){
-    for(let i = 0; i < Buildings.buildingArray.length; i++){
-        let building = Buildings.buildingArray[i];
+function disableOrEnableButtons(array){
+    for(let i = 0; i < array.length; i++){
+        let building = array[i];
         let costCounter = 0;
         for(let j in building.cost){
             if (Player[j].amount >= building.cost[j].amount){
@@ -203,9 +219,6 @@ function disableOrEnableButtons(){
 }
 
 function updateBuildingConditions(){
-
-    disableOrEnableButtons();
-
     for(let count = 0; count < Buildings.buildingArray.length; count++){
         let building = Buildings.buildingArray[count];
         if(building.unlocked == true){
@@ -214,36 +227,58 @@ function updateBuildingConditions(){
     }
 }
 
-function updateOutpostMenu(){
-    if (currentMenu == "Outpost" && outpostCheck == false){
-        updateCheck();
-        outpostCheck = true;
-        setInterval(createOutpostMenu, timeInterval);
-    }
-}
-
 /**
  * RESOURCE MENU
  */
 
 export function createResourceMenu(){
-    for(let i in Player){
-        if(typeof Player[i] == typeof Player){
+    for(let resource in Player){
+        if(typeof Player[resource] == typeof Player){
+            let div = document.createElement('div');
             let p = document.createElement('p');
-            p.setAttribute("id", Player[i].label);
+            p.setAttribute("id", `${Player[resource].label}Resource`);
             p.setAttribute("class", "Resource");
-
-            let displayAmount = Player[i].amount;
-            let displayLimit = Player[i].limit;
-
-            displayAmount = convertNotation(displayAmount);
-            displayLimit = convertNotation(displayLimit);
-
-            p.innerText = `${Player[i].label}: ${displayAmount} / ${displayLimit}`;
-
-            if(Player[i].display == true && !document.getElementById(`${Player[i].label}`)) DOM.leftDiv.append(p);
+            if(Player[resource].display == true && !document.getElementById(`${Player[resource].label}Resource`)){
+                div.addEventListener('mouseenter', () => resourceInfoDiv(resource, div));
+                div.addEventListener('mouseleave', infoDivOut);
+                div.append(p);
+                DOM.leftDiv.append(div);
+            }
         }
     }
+}
+
+function resourceInfoDiv(resource, parent){
+    let y = parent.offsetTop;
+    let x = parent.offsetLeft + parent.offsetWidth + 10;
+    let infoDiv = document.createElement('div');
+
+    let buildingsTitle = document.createElement('h3');
+    buildingsTitle.textContent = "Buildings:";
+    infoDiv.append(buildingsTitle);
+    infoDiv.append(document.createElement('hr'));
+    for(let count = 0; count < Buildings.buildingArray.length; count++){
+        let building = Buildings.buildingArray[count];
+        let p = document.createElement('p');
+        let sign = "";
+        if(building.prodRate[resource].amount >= 0) sign = "+";
+
+        let buildingProd = (building.prodRate[resource].amount * building.stk);
+        buildingProd = convertNotation(buildingProd);
+        p.textContent = `${building.name}: ${sign}${buildingProd}/s`;
+        if(building.stk > 0 && buildingProd != 0) infoDiv.append(p);
+    }
+
+    // let bonusesTitle = document.createElement('h3');
+    // bonusesTitle.textContent = "Bonuses:";
+    // infoDiv.append(bonusesTitle);
+    // infoDiv.append(document.createElement('hr'));
+
+    infoDiv.setAttribute("id", "infoDiv");
+    infoDiv.style.top = y.toString() + "px";
+    infoDiv.style.left = x.toString() + "px";
+    if(infoDiv.childElementCount <= 2) return;
+    parent.append(infoDiv);
 }
 
 function convertNotation(number){
@@ -254,19 +289,32 @@ function convertNotation(number){
 function updateResources(){
     for(let i in Player){
         if(typeof Player[i] == typeof Player && Player[i].display){
-            let p = document.getElementById(`${Player[i].label}`);
+            let p = document.getElementById(`${Player[i].label}Resource`);
             if (p != null){
                 let displayAmount = Player[i].amount;
                 let displayLimit = Player[i].limit;
+                let displayRate = productionList[i].amount * (1000 / timeInterval);
     
                 displayAmount = convertNotation(displayAmount);
                 displayLimit = convertNotation(displayLimit);
-    
-                p.innerText = `${Player[i].label}: ${displayAmount} / ${displayLimit}`;
+                displayRate = convertNotation(displayRate);
+
+                let sign = "";
+                if (displayRate >= 0) sign = "+";
+
+                p.style.color = warnColorText(displayAmount, displayLimit);
+                p.innerText = `${Player[i].label}: ${displayAmount} / ${displayLimit} (${sign}${displayRate}/s)`;
             }
         }
     }
     createResourceMenu();
+}
+
+function warnColorText(amount, limit){
+    if(amount == limit) return "rgb(255,75,75)";
+    else if(amount >= 0.75 * limit) return "orange";
+    else if (amount >= 0.5 * limit) return "yellow";
+    else return "white";
 }
 
 export function updateResourceMenu(){
@@ -308,16 +356,13 @@ export function createGameMenu(){
     }
 }
 
-export function updateGameMenu(){
-    setInterval(createGameMenu, timeInterval);
-}
-
 /**
  * RESEARCH MENU
  */
 
 function createResearchMenu(){
     if (currentMenu != "Research") return;
+    updateResearchConditions();
     DOM.gameButtonsDiv.style.flexFlow = "column";
     for(let count = 0; count < Techs.researchArray.length; count++){
         let research = Techs.researchArray[count];
@@ -326,7 +371,6 @@ function createResearchMenu(){
             insertButton(research, PlayerMethod.purchaseTechnology.bind(research));
         }
     }
-    updateResearchMenu();
 }
 
 function updateResearchConditions(){
@@ -335,18 +379,10 @@ function updateResearchConditions(){
         let p = document.getElementById(research.name);
         if(research.unlocked == true && p == null){
             research.display = true;
-            createResearchMenu();
         }
     }
 }
 
-function updateResearchMenu(){
-    if(currentMenu == "Research" && researchCheck == false){
-        updateCheck();
-        researchCheck = true;
-        setInterval(updateResearchConditions, timeInterval);
-    }
-}
 
 /**
  * STORAGE MENU
@@ -362,12 +398,10 @@ function createStorageMenu(){
             insertButton(building, PlayerMethod.purchaseBuilding.bind(building));
         }
     }
-    updateStorageMenu();
+    disableOrEnableButtons(Buildings.storageArray);
 }
 
 function updateStorageConditions(){
-    disableOrEnableButtons();
-
     for(let count = 0; count < Buildings.storageArray.length; count++){
         let building = Buildings.storageArray[count];
         if(building.unlocked == true){
@@ -376,10 +410,39 @@ function updateStorageConditions(){
     }
 }
 
-function updateStorageMenu(){
-    if(currentMenu == "Storage" && storageCheck == false){
-        updateCheck();
-        storageCheck = true;
-        setInterval(createStorageMenu, timeInterval);
+/**
+ * UGRADES MENU
+ */
+
+function createUpgradesMenu(){
+    if (currentMenu != "Upgrades") return;
+    updateUpgradesConditions();
+    DOM.gameButtonsDiv.style.flexFlow = "row wrap";
+    for(let count = 0; count < Upgrades.upgradeArray.length; count++){
+        let upgrade = Upgrades.upgradeArray[count];
+        if(upgrade.display && upgrade.unlocked && !upgrade.purchased && document.getElementById(`${upgrade.name}`) == null){
+            insertButton(upgrade, PlayerMethod.purchaseUpgrade.bind(upgrade));
+        }
     }
+}
+
+function updateUpgradesConditions(){
+    for(let count = 0; count < Upgrades.upgradeArray.length; count++){
+        let upgrade = Upgrades.upgradeArray[count];
+        let p = document.getElementById(`${upgrade.name}`);
+        if(upgrade.purchased == true && p != null){
+            p.parentNode.parentNode.remove();
+        }
+        if(upgrade.unlocked == true){
+            upgrade.display = true;
+        }
+    }
+}
+
+export function updateMenus(){
+    setInterval(createGameMenu, timeInterval);
+    setInterval(createOutpostMenu, timeInterval);
+    setInterval(createResearchMenu, timeInterval);
+    setInterval(createStorageMenu, timeInterval);
+    setInterval(createUpgradesMenu, timeInterval);
 }
