@@ -10,8 +10,8 @@ let outpostMenu = {
     label: "Outpost",
     display: true,
 }
-let researchMenu = {
-    label: "Research",
+let technologyMenu = {
+    label: "Technology",
     display: true,
 }
 let storageMenu = {
@@ -23,7 +23,7 @@ let upgradesMenu = {
     display: false,
 }
 
-export let menuArray = {outpost: outpostMenu, research: researchMenu, storage: storageMenu, upgrades: upgradesMenu};
+export let menuArray = {outpost: outpostMenu, technology: technologyMenu, storage: storageMenu, upgrades: upgradesMenu};
 
 /**
  * LOCAL STORAGE

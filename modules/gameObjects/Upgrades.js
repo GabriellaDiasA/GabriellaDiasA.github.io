@@ -1,21 +1,22 @@
-import { Upgrade, ResourceList } from './Classes.js';
+import { Upgrade, ResourceList } from '../Classes.js';
 import * as Buildings from './Buildings.js';
-import { Player } from './PlayerInv.js';
 
 /**
  * COSTS~
  */
 
-let reinforcedDrillsCost = new ResourceList(0, 0, 250, 0, 0, 0, 0);
-let intelligentTrackingCost = new ResourceList(0, 0, 300, 0, 0, 0, 0);
-let droneRecyclingICost = new ResourceList(2500, 1500, 0, 0, 0, 0, 0);
-let betterSmeltingCost = new ResourceList(0, 500, 300, 0, 0, 0, 0);
-let copperSmeltingCost = new ResourceList(3000, 1500, 500, 0, 0, 0, 0);
-let silosCost = new ResourceList(2000, 1250, 0, 1000, 0, 0, 0);
-let advancedDroneCircuitryCost = new ResourceList(2000, 0, 0, 0, 750, 0, 0);
-let intelligentPathfindingCost = new ResourceList(3500, 0, 2000, 0, 1500, 0, 0);
-let oscillatorsCost = new ResourceList(4000, 0, 2000, 0, 2500, 8000, 0);
-let quartzProcessingCost = new ResourceList(6500, 0, 2500, 0, 3500, 0, 0);
+let reinforcedDrillsCost = new ResourceList(0, 0, 250, 0, 0, 0, 0, 0);
+let intelligentTrackingCost = new ResourceList(0, 0, 300, 0, 0, 0, 0, 0);
+let scavengerTradeCost = new ResourceList(2000, 1000, 0, 0, 0, 0, 0, 0);
+let droneRecyclingICost = new ResourceList(2500, 1500, 0, 0, 0, 0, 0, 0);
+let betterSmeltingCost = new ResourceList(0, 500, 300, 0, 0, 0, 0, 0);
+let miningCentralCost = new ResourceList(10000, 0, 0, 0, 0, 0, 0, 0);
+let copperSmeltingCost = new ResourceList(3000, 1500, 500, 0, 0, 0, 0, 0);
+let silosCost = new ResourceList(2000, 1250, 0, 1000, 0, 0, 0, 0);
+let advancedDroneCircuitryCost = new ResourceList(2000, 0, 0, 0, 750, 0, 0, 0);
+let intelligentPathfindingCost = new ResourceList(3500, 0, 2000, 0, 1500, 0, 0, 0);
+let oscillatorsCost = new ResourceList(4000, 0, 2000, 0, 2500, 8000, 0, 0);
+let quartzProcessingCost = new ResourceList(6500, 0, 2500, 0, 3500, 0, 0, 0);
 
 /**
  * METHODS~
@@ -24,13 +25,20 @@ let quartzProcessingCost = new ResourceList(6500, 0, 2500, 0, 3500, 0, 0);
 let reinforcedDrillsMethod = function(){
     this.purchased = true;
     Buildings.MiningDroneMkI.prodRate.ironOre.amount += 0.15;
-    Buildings.MiningDroneMkII.prodRate.ironOre.amount += 0.35;
-    Buildings.MiningDroneMkII.prodRate.copperOre.amount += 0.05;
+    Buildings.MiningDroneMkII.prodRate.ironOre.amount += 0.3;
+    Buildings.MiningDroneMkII.prodRate.copperOre.amount += 0.15;
 }
 
 let intelligentTrackingMethod = function(){
     this.purchased = true;
-    Buildings.ScavengerDrone.prodRate.scrap.amount += 0.15;
+    Buildings.ScavengerDrone.prodRate.scrap.amount += 0.5;
+    Buildings.ScavengerDrone.bonusProd += 0.25;
+}
+
+let scavengerTradeMethod = function(){
+    this.purchased = true;
+    droneRecyclingI.unlock();
+    Buildings.ScavengerBay.unlocked = true;
 }
 
 let droneRecyclingIMethod = function(){
@@ -41,14 +49,19 @@ let droneRecyclingIMethod = function(){
 
 let betterSmeltingMethod = function(){
     this.purchased = true;
-    Buildings.Smelter.prodRate.iron.amount += 0.01;
+    Buildings.Smelter.prodRate.iron.amount += 0.1;
     Buildings.Smelter.prodRate.ironOre.amount += 0.2;
+}
+
+let miningCentralMethod = function(){
+    this.purchased = true;
+    Buildings.MiningCentral.unlocked = true;
 }
 
 let copperSmeltingMethod = function(){
     this.purchased = true;
-    Buildings.Smelter.prodRate.copper.amount += 0.05;
-    Buildings.Smelter.prodRate.copperOre.amount -= 1;
+    Buildings.Smelter.prodRate.copper.amount += 0.25;
+    Buildings.Smelter.prodRate.copperOre.amount -= 0.5;
 }
 
 let silosMethod = function(){
@@ -59,15 +72,17 @@ let silosMethod = function(){
 let advancedDroneCircuitryMethod = function(){
     this.purchased = true;
     Buildings.ScavengerDrone.prodRate.scrap.amount += 0.25;
-    Buildings.MiningDroneMkII.prodRate.copperOre.amount += 0.05;
+    Buildings.MiningDroneMkII.prodRate.copperOre.amount += 0.1;
     Buildings.MiningDroneMkII.prodRate.ironOre.amount += 0.2;
 }
 
 let intelligentPathfindingMethod = function(){
     this.purchased = true;
     Buildings.ScavengerDrone.prodRate.scrap.amount += 0.45;
-    Buildings.MiningDroneMkII.prodRate.copperOre.amount += 0.2;
+    Buildings.ScavengerDrone.bonusProd += 0.1;
+    Buildings.MiningDroneMkII.prodRate.copperOre.amount += 0.25;
     Buildings.MiningDroneMkII.prodRate.ironOre.amount += 0.5;
+    Buildings.MiningDroneMkII.bonusProd += 0.15;
 }
 
 let oscillatorsMethod = function(){
@@ -95,11 +110,21 @@ let intelligentTrackingUnlock = function(){
     this.unlocked = true;
 }
 
-let droneRecyclingIUnlock = function(){
+let scavengerTradeUnlock = function(){
     this.unlocked = true;
 }
 
+let droneRecyclingIUnlock = function(){
+    if(scavengerTrade.purchased){
+        this.unlocked = true;
+    }
+}
+
 let betterSmeltingUnlock = function(){
+    this.unlocked = true;
+}
+
+let miningCentralUnlock = function(){
     this.unlocked = true;
 }
 
@@ -133,8 +158,10 @@ let quartzProcessingUnlock = function(){
 
 let reinforcedDrillsFlavorText = "Could use sharpening.";
 let intelligentTrackingFlavorText = "Do your scavenger drones keep getting lost? I know mine do!";
+let scavengerTradeFlavorText = undefined;
 let droneRecyclingIFlavorText = "Reduce, reuse, recycle.";
 let betterSmeltingFlavorText = "It's just better."
+let miningCentralFlavorText = "Miners Inc.";
 let copperSmeltingFlavorText = "The copper's melting!";
 let silosFlavorText = undefined;
 let advancedDroneCircuitryFlavorText = "It is impressive what a few extra wires here and there can do for efficiency.";
@@ -148,8 +175,10 @@ let quartzProcessingFlavorText = undefined;
 
 let reinforcedDrillsEffectsText = "Mining Drones gather ore faster.";
 let intelligentTrackingEffectsText = "Scavenger Drones gather scrap faster.";
+let scavengerTradeEffectsText = "Unlocks opportunities to greatly increase scrap-gathering potential.";
 let droneRecyclingIEffectsText = "Your Scavenger Drones are slightly cheaper to produce. Makes a bigger difference the more you have.";
 let betterSmeltingEffectsText = "Your Smelters convert less Iron Ore into more Iron."
+let miningCentralEffectsText = "Allows you to build a Mining Central, which greatly boosts your mining drones' capacities.";
 let copperSmeltingEffectsText = "Your Smelters now also convert Copper Ore into Copper.";
 let silosEffectText = "Unlocks a powerful storage option.";
 let advancedDroneCircuitryEffectsText = "Your drones do their jobs slightly faster.";
@@ -167,11 +196,17 @@ reinforcedDrillsMethod, reinforcedDrillsUnlock, reinforcedDrillsFlavorText, rein
 export let intelligentTracking = new Upgrade('Intelligent Tracking', intelligentTrackingCost, false, false,
 intelligentTrackingMethod, intelligentTrackingUnlock, intelligentTrackingFlavorText, intelligentTrackingEffectsText);
 
+export let scavengerTrade = new Upgrade('Scavenger Trade', scavengerTradeCost, false, false,
+scavengerTradeMethod, scavengerTradeUnlock, scavengerTradeFlavorText, scavengerTradeEffectsText);
+
 export let droneRecyclingI = new Upgrade('Drone Recycling I', droneRecyclingICost, false, false,
 droneRecyclingIMethod, droneRecyclingIUnlock, droneRecyclingIFlavorText, droneRecyclingIEffectsText);
 
 export let betterSmelting = new Upgrade('Better Smelting', betterSmeltingCost, false, false,
 betterSmeltingMethod, betterSmeltingUnlock, betterSmeltingFlavorText, betterSmeltingEffectsText);
+
+export let miningCentral = new Upgrade('Mining Central', miningCentralCost, false, false,
+miningCentralMethod, miningCentralUnlock, miningCentralFlavorText, miningCentralEffectsText);
 
 export let copperSmelting = new Upgrade('Copper Smelting', copperSmeltingCost, false, false,
 copperSmeltingMethod, copperSmeltingUnlock, copperSmeltingFlavorText, copperSmeltingEffectsText);
@@ -191,8 +226,9 @@ oscillatorsMethod, oscillatorsUnlock, oscillatorsFlavorText, oscillatorsEffectsT
 export let quartzProcessing = new Upgrade('Quartz Processing', quartzProcessingCost, false, false,
 quartzProcessingMethod, quartzProcessingUnlock, quartzProcessingFlavorText, quartzProcessingEffectsText);
 
-export let upgradeArray = [reinforcedDrills, intelligentTracking, droneRecyclingI, betterSmelting,
-    copperSmelting, silos, advancedDroneCircuitry, intelligentPathfinding, oscillators, quartzProcessing];
+export let upgradeArray = [reinforcedDrills, intelligentTracking, scavengerTrade, droneRecyclingI, betterSmelting,
+    miningCentral, copperSmelting, silos, advancedDroneCircuitry, intelligentPathfinding, oscillators,
+    quartzProcessing];
 
 /**
  * LOCAL STORAGE

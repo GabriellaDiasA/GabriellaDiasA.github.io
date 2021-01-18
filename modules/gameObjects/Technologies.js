@@ -1,22 +1,21 @@
-import { Research, ResourceList } from './Classes.js';
+import { Technology, ResourceList, Upgrade } from '../Classes.js';
 import * as Buildings from './Buildings.js';
-import { Player } from './PlayerInv.js';
-import * as DOM from './HTMLObjects.js';
+import { basicResources } from '../PlayerInv.js';
+import * as DOM from '../HTMLObjects.js';
 import * as Upgrades from './Upgrades.js';
 
-let ScavengerDroneTechCost = new ResourceList(35, 0, 0, 0, 0, 0, 0);
-let DiggingCost = new ResourceList(50, 0, 0, 0, 0, 0, 0);
-let MiningDroneMkITechCost = new ResourceList(200, 0, 0, 0, 0, 0, 0);
-let SmeltingCost = new ResourceList(0, 200, 0, 0, 0, 0, 0);
-let AssemblingMachineCost = new ResourceList(600, 300, 100, 0, 0, 0, 0);
-let BasicElectrolysisCost = new ResourceList(0, 0, 75, 0, 0, 0, 0);
-let MiningDroneMkIICost = new ResourceList(250, 0, 100, 0, 0, 0, 0);
-let CopperRefiningCost = new ResourceList(0, 0, 800, 350, 0, 0, 0);
-let CopperWorkingCost = new ResourceList(0, 0, 0, 1000, 150, 0, 0);
-let QuartzMiningCost = new ResourceList(0, 0, 2000, 0, 1500, 0, 0);
-let OpticsCost = new ResourceList(8000, 0, 4000, 0 , 3500, 10000, 0);
-let SiliconTechCost = new ResourceList(8000, 0, 3000, 0, 5000, 0, 0);
-
+let ScavengerDroneTechCost = new ResourceList(35, 0, 0, 0, 0, 0, 0, 0);
+let DiggingCost = new ResourceList(50, 0, 0, 0, 0, 0, 0, 0);
+let MiningDroneMkITechCost = new ResourceList(200, 0, 0, 0, 0, 0, 0, 0);
+let SmeltingCost = new ResourceList(0, 200, 0, 0, 0, 0, 0, 0);
+let AssemblingMachineCost = new ResourceList(600, 300, 100, 0, 0, 0, 0, 0);
+let BasicElectrolysisCost = new ResourceList(0, 0, 75, 0, 0, 0, 0, 0);
+let MiningDroneMkIICost = new ResourceList(250, 0, 100, 0, 0, 0, 0, 0);
+let CopperRefiningCost = new ResourceList(0, 0, 800, 350, 0, 0, 0, 0);
+let CopperWorkingCost = new ResourceList(0, 0, 0, 1000, 150, 0, 0, 0);
+let QuartzMiningCost = new ResourceList(0, 0, 2000, 0, 1500, 0, 0, 0);
+let OpticsCost = new ResourceList(8000, 0, 4000, 0 , 3500, 10000, 0, 0);
+let SiliconTechCost = new ResourceList(8000, 0, 3000, 0, 5000, 0, 0, 0);
 
 /**
  * METHODS~
@@ -40,7 +39,7 @@ let DiggingMethod = function(){
 let MiningDroneMkITechMethod = function(){
     this.purchased = true;
     Buildings.MiningDroneMkI.unlocked = true;
-    Player.ironOre.display = true;
+    basicResources.ironOre.display = true;
     Smelting.unlock();
     this.disableButton();
 }
@@ -48,7 +47,7 @@ let MiningDroneMkITechMethod = function(){
 let SmeltingMethod = function(){
     this.purchased = true;
     Buildings.Smelter.unlocked = true;
-    Player.iron.display = true;
+    basicResources.iron.display = true;
     AssemblingMachine.unlock();
     BasicElectrolysis.unlock();
     this.disableButton();
@@ -60,7 +59,7 @@ let AssemblingMachineMethod = function(){
     Buildings.Warehouse.unlocked = true;
     Upgrades.reinforcedDrills.unlock();
     Upgrades.intelligentTracking.unlock();
-    Upgrades.droneRecyclingI.unlock();
+    Upgrades.scavengerTrade.unlock();
     this.disableButton();
 }
 
@@ -74,18 +73,21 @@ let BasicElectrolysisMethod = function(){
 
 let MiningDroneMkIIMethod = function(){
     this.purchased = true;
-    Buildings.buildingArray[1] = Buildings.MiningDroneMkII;
-    Player.copperOre.display = true;
+    Buildings.buildingList.miningDroneMkI.unlocked = false;
+    Buildings.buildingList.miningDroneMkI.stk = 0;
+    Buildings.buildingList.miningDroneMkI.display = false;  
+    basicResources.copperOre.display = true;
     Buildings.MiningDroneMkII.unlocked = true;  
     CopperRefining.unlock();
+    Upgrades.miningCentral.unlock();
     this.disableButton();
 }
 
 let CopperRefiningMethod = function(){
     this.purchased = true;
-    Player.copper.display = true;
-    Buildings.Electrolyzer.prodRate.copper.amount += 0.1;
-    Buildings.Electrolyzer.prodRate.scrap.amount -= 2;
+    basicResources.copper.display = true;
+    Buildings.Electrolyzer.prodRate.copper.amount += 0.8;
+    Buildings.Electrolyzer.prodRate.scrap.amount -= 4;
     Upgrades.silos.unlock();
     Upgrades.copperSmelting.unlock();
     QuartzMining.unlock();
@@ -103,7 +105,7 @@ let CopperWorkingMethod = function(){
 
 let QuartzMiningMethod = function(){
     this.purchased = true;
-    Player.quartz.display = true;
+    basicResources.quartz.display = true;
     Buildings.MiningDroneMkII.prodRate.quartz.amount = 3.0;
     Optics.unlock();
     SiliconTech.unlock();
@@ -119,7 +121,7 @@ let OpticsMethod = function(){
 
 let SiliconTechMethod = function(){
     this.purchased = true;
-    Player.silicon.display = true;
+    basicResources.silicon.display = true;
     Upgrades.quartzProcessing.unlock();
     this.disableButton();
 }
@@ -216,47 +218,47 @@ let SiliconTechEffectsText = "Unlocks Silicon and methods to obtain it from quar
  * TECHS
  */
 
-let ScavengerDroneTech = new Research('Scavenger Drones', ScavengerDroneTechCost, true, true,
+let ScavengerDroneTech = new Technology('Scavenger Drones', ScavengerDroneTechCost, true, true,
 ScavengerDroneTechMethod, ScavengerDroneTechUnlock, ScavengerDroneTechFlavorText, ScavengerDroneTechEffectsText);
 
-let Digging = new Research('Digging', DiggingCost, true, true,
+let Digging = new Technology('Digging', DiggingCost, true, true,
 DiggingMethod, DiggingUnlock, DiggingFlavorText, DiggingEffectsText);
 
-let MiningDroneMkITech = new Research('Mining Drones Mk. I', MiningDroneMkITechCost, false, false,
+let MiningDroneMkITech = new Technology('Mining Drones Mk. I', MiningDroneMkITechCost, false, false,
 MiningDroneMkITechMethod, MiningDroneMkITechUnlock, MiningDroneMkITechFlavorText, MiningDroneMkITechEffectsText);
 
-let Smelting = new Research('Smelting', SmeltingCost, false, false,
+let Smelting = new Technology('Smelting', SmeltingCost, false, false,
 SmeltingMethod, SmeltingUnlock, SmeltingFlavorText, SmeltingEffectsText);
 
-let AssemblingMachine = new Research('Assembling Machine', AssemblingMachineCost, false, false,
+let AssemblingMachine = new Technology('Assembling Machine', AssemblingMachineCost, false, false,
 AssemblingMachineMethod, AssemblingMachineUnlock, AssemblingMachineFlavorText, AssemblingMachineEffectsText);
 
-let BasicElectrolysis = new Research('Basic Electrolysis', BasicElectrolysisCost, false, false,
+let BasicElectrolysis = new Technology('Basic Electrolysis', BasicElectrolysisCost, false, false,
 BasicElectrolysisMethod, BasicElectrolysisUnlock, BasicElectrolysisFlavorText, BasicElectrolysisEffectsText);
 
-let MiningDroneMkII = new Research('Mining Drones Mk. II', MiningDroneMkIICost, false, false,
+let MiningDroneMkII = new Technology('Mining Drones Mk. II', MiningDroneMkIICost, false, false,
 MiningDroneMkIIMethod, MiningDroneMkIIUnlock, MiningDroneMkIIFlavorText, MiningDroneMkIIEffectsText);
 
-let CopperRefining = new Research('Copper Refining', CopperRefiningCost, false, false,
+let CopperRefining = new Technology('Copper Refining', CopperRefiningCost, false, false,
 CopperRefiningMethod, CopperRefiningUnlock, CopperRefiningFlavorText, CopperRefiningEffectsText);
 
-let CopperWorking = new Research('Copper Working', CopperWorkingCost, false, false,
+let CopperWorking = new Technology('Copper Working', CopperWorkingCost, false, false,
 CopperWorkingMethod, CopperWorkingUnlock, CopperWorkingFlavorText, CopperWorkingEffectsText);
 
-let QuartzMining = new Research('Quartz Mining', QuartzMiningCost, false, false,
+let QuartzMining = new Technology('Quartz Mining', QuartzMiningCost, false, false,
 QuartzMiningMethod, QuartzMiningUnlock, QuartzMiningFlavorText, QuartzMiningEffectsText);
 
-let Optics = new Research('Optics', OpticsCost, false, false,
+let Optics = new Technology('Optics', OpticsCost, false, false,
 OpticsMethod, OpticsUnlock, OpticsFlavorText, OpticsEffectsText);
 
-let SiliconTech = new Research('Silicon', SiliconTechCost, false, false,
+let SiliconTech = new Technology('Silicon', SiliconTechCost, false, false,
 SiliconTechMethod, SiliconTechUnlock, SiliconTechFlavorText, SiliconTechEffectsText);
                                 
-export let researchArray = [ScavengerDroneTech, Digging, MiningDroneMkITech, Smelting,
+export let technologyArray = [ScavengerDroneTech, Digging, MiningDroneMkITech, Smelting,
     AssemblingMachine, BasicElectrolysis, MiningDroneMkII, CopperRefining, CopperWorking, QuartzMining,
     Optics, SiliconTech];
 
-// let template = new Research('', templateCost, false, false,
+// let template = new Technology('', templateCost, false, false,
 // templateMethod, templateUnlock, templateFlavorText, templateEffectsText);
 
 /**
@@ -264,7 +266,7 @@ export let researchArray = [ScavengerDroneTech, Digging, MiningDroneMkITech, Sme
  */
 
 export function loadTechArray(){
-    if(!localStorage.getItem(`${researchArray[0].name}`)){
+    if(!localStorage.getItem(`${technologyArray[0].name}`)){
         setInterval(setTechs, 500);
     }
     else{
@@ -274,20 +276,20 @@ export function loadTechArray(){
 }
 
 function setTechs(){
-    for(let building in researchArray){
+    for(let building in technologyArray){
         let tempObj = {};
-        for(let property in researchArray[building]){
-            if(typeof tempObj[property] != typeof console.log) tempObj[property] = researchArray[building][property];
+        for(let property in technologyArray[building]){
+            if(typeof tempObj[property] != typeof console.log) tempObj[property] = technologyArray[building][property];
         }
-        localStorage.setItem(`${researchArray[building].name}`, JSON.stringify(tempObj));
+        localStorage.setItem(`${technologyArray[building].name}`, JSON.stringify(tempObj));
     }
 }
 
 function getTechs(){
-    for(let building in researchArray){
-        let tempObj = JSON.parse(localStorage.getItem(`${researchArray[building].name}`));
+    for(let building in technologyArray){
+        let tempObj = JSON.parse(localStorage.getItem(`${technologyArray[building].name}`));
         for(let property in tempObj){
-            researchArray[building][property] = tempObj[property];
+            technologyArray[building][property] = tempObj[property];
         }
     }
 }

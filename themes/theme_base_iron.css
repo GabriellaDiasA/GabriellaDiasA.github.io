@@ -55,7 +55,7 @@ p{
     padding-left: 10px;
 
     flex-flow: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
 }
 

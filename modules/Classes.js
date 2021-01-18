@@ -1,5 +1,3 @@
-import { Player } from './PlayerInv.js';
-
 export class Building{
     constructor(name, stk, prodRate, cost, baseCost, costRate, display, unlocked, flavorText){
         this.name = name;
@@ -12,11 +10,14 @@ export class Building{
         this.unlocked = unlocked;
         this.flavorText = flavorText;
         this.bonusProd = 1;
+        this.buildingBonusProd = 1;
     }
 
     updateButtonText(){
         let button = document.getElementById(`${this.name}`);
-        if (button == null) return 0;
+        if (button == null){
+            return;
+        }
         button.textContent = `${this.name}: ${this.stk}`;
     }
 
@@ -37,10 +38,14 @@ export class Building{
             this.cost[i].amount = (this.baseCost[i].amount * (this.costRate ** this.stk));
         }
     }
+
+    updateBuildingBonusProd(number){
+        this.buildingBonusProd += number;
+    }
 }
 
 export class ResourceList{
-    constructor(scrap, ironOre, iron, copperOre, copper, quartz, silicon){
+    constructor(scrap, ironOre, iron, copperOre, copper, quartz, silicon, bits){
         this.scrap = {amount: scrap, label: "Scrap"};
         this.ironOre = {amount: ironOre, label: "Iron Ore"};
         this.iron = {amount: iron, label: "Iron"};
@@ -48,10 +53,11 @@ export class ResourceList{
         this.copper = {amount: copper, label: "Copper"};
         this.quartz = {amount: quartz, label: "Quartz"};
         this.silicon = {amount: silicon, label: "Silicon"};
+        this.bits = {amount: bits, label: "Bits"};
     }
 }
 
-export class Research{
+export class Technology{
     constructor(name, cost, display, unlocked, method, unlockMethod, flavorText, effectsText){
         this.name = name;
         this.cost = cost;
@@ -94,12 +100,22 @@ export class StorageBuilding extends Building{
     constructor(name, stk, limitIncrease, cost, baseCost, costRate, display, unlocked, flavorText){
         super(name, stk, false, cost, baseCost, costRate, display, unlocked, flavorText);
         this.limitIncrease = limitIncrease;
+        this.bonusLimit = 1;
     }
 }
 
 export class LimitIncrease extends ResourceList{
 }
 
-export class Upgrade extends Research{
+export class Upgrade extends Technology{
 
+}
+
+export class BonusBuilding extends Building{
+    constructor(name, stk, resourceBonus, buildingBonus, cost, baseCost, costRate, display, unlocked, flavorText){
+        super(name, stk, false, cost, baseCost, costRate, display, unlocked, flavorText);
+        this.resourceBonus = resourceBonus;
+        this.buildingBonus = buildingBonus;
+        this.selfBonus = 1;
+    }
 }

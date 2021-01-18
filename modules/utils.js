@@ -1,6 +1,7 @@
-import * as Buildings from './Buildings.js';
+import * as Buildings from './gameObjects/Buildings.js';
 import { ResourceList } from './Classes.js';
 import { timeInterval } from './constants.js';
+import { basicResources } from './PlayerInv.js';
 
 export let productionList = new ResourceList(0, 0, 0, 0, 0, 0, 0);
 
@@ -12,10 +13,16 @@ function resetNetProduction(){
 
 export function calculateNetProduction(){
     resetNetProduction();
-    for(let count = 0; count < Buildings.buildingArray.length; count++){
-        let building = Buildings.buildingArray[count]
+    for(let element in Buildings.buildingList){
+        let building = Buildings.buildingList[element]
         for(let resource in building.prodRate){
-            productionList[resource].amount += building.prodRate[resource].amount * building.bonusProd * building.stk * (timeInterval / 1000);
+            if(building.prodRate != false){
+                if(building.prodRate[resource].amount > 0){
+                    productionList[resource].amount += building.prodRate[resource].amount * building.bonusProd * building.stk * (timeInterval / 1000) * basicResources[resource].bonusOne * building.buildingBonusProd;
+                }else{
+                    productionList[resource].amount += building.prodRate[resource].amount * building.bonusProd * building.stk * (timeInterval / 1000);
+                }
+            }
         }
     }
 }

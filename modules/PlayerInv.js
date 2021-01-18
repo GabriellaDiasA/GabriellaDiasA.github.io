@@ -1,25 +1,28 @@
-export let Player = {
-    scrap: {amount: 0, label:"Scrap", display: true, limit: 500},
-    ironOre: {amount: 0, label: "Iron Ore", display: false, limit: 400},
-    iron: {amount: 0, label: "Iron", display: false, limit: 200},
-    copperOre: {amount: 0, label: "Copper Ore", display: false, limit: 400},
-    copper: {amount: 0, label: "Copper", display: false, limit: 200},
-    quartz: {amount: 0, label: "Quartz", display: false, limit: 500},
-    silicon: {amount: 0, label: "Silicon", display: false, limit: 150},
+export let basicResources = {
+    scrap: {amount: 0, label:"Scrap", display: true, limit: 5000, bonusOne: 1},
+    ironOre: {amount: 0, label: "Iron Ore", display: false, limit: 400, bonusOne: 1},
+    iron: {amount: 0, label: "Iron", display: false, limit: 200, bonusOne: 1},
+    copperOre: {amount: 0, label: "Copper Ore", display: false, limit: 400, bonusOne: 1},
+    copper: {amount: 0, label: "Copper", display: false, limit: 200, bonusOne: 1},
+    quartz: {amount: 0, label: "Quartz", display: false, limit: 500, bonusOne: 1},
+    silicon: {amount: 0, label: "Silicon", display: false, limit: 150, bonusOne: 1},
+    bits: {amount: 0, label: "Bits", display: false, limit: 1024, bonusOne: 1},
 }
 
-// export let Player = {
-//     scrap: {amount: 500000, label:"Scrap", display: true, limit: 500000},
-//     ironOre: {amount: 500000, label: "Iron Ore", display: false, limit: 500000},
-//     iron: {amount: 500000, label: "Iron", display: false, limit: 500000},
-//     copperOre: {amount: 500000, label: "Copper Ore", display: false, limit: 500000},
-//     copper: {amount: 500000, label: "Copper", display: false, limit: 500000},
-//     quartz: {amount: 500000, label: "Quartz", display: false, limit: 500000},
-//     silicon: {amount: 500000, label: "Silicon", display: false, limit: 500000},
-// }
+export let basePlayer = {
+    scrap: {amount: 0, label:"Scrap", display: true, limit: 500, bonusOne: 1},
+    ironOre: {amount: 0, label: "Iron Ore", display: false, limit: 400, bonusOne: 1},
+    iron: {amount: 0, label: "Iron", display: false, limit: 200, bonusOne: 1},
+    copperOre: {amount: 0, label: "Copper Ore", display: false, limit: 400, bonusOne: 1},
+    copper: {amount: 0, label: "Copper", display: false, limit: 200, bonusOne: 1},
+    quartz: {amount: 0, label: "Quartz", display: false, limit: 500, bonusOne: 1},
+    silicon: {amount: 0, label: "Silicon", display: false, limit: 150, bonusOne: 1},
+    bits: {amount: 0, label: "Bits", display: false, limit: 1024, bonusOne: 1},
+}
 
 export function loadPlayer(){
     if(!localStorage.getItem('basicResources')){
+        
         setInterval(setPlayer, 500);
     }else{
         getPlayer();
@@ -28,9 +31,9 @@ export function loadPlayer(){
 }
 
 function getPlayer(){
-    Player = JSON.parse(localStorage.getItem('basicResources'));
+    basicResources = JSON.parse(localStorage.getItem('basicResources'));
 }
 
 function setPlayer(){
-    localStorage.setItem('basicResources', JSON.stringify(Player));
+    localStorage.setItem('basicResources', JSON.stringify(basicResources));
 }

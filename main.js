@@ -1,9 +1,9 @@
 import * as DOMAssets from './modules/HTMLAssets.js';
-import * as Buildings from './modules/Buildings.js';
-import * as Techs from  './modules/Technologies.js';
-import * as Upgrades from './modules/Upgrades.js';
+import * as Buildings from './modules/gameObjects/Buildings.js';
+import * as Techs from  './modules/gameObjects/Technologies.js';
+import * as Upgrades from './modules/gameObjects/Upgrades.js';
 import * as DOM from './modules/HTMLObjects.js';
-import { Player, loadPlayer } from './modules/PlayerInv.js';
+import { loadPlayer } from './modules/PlayerInv.js';
 
 function startGame(){
     loadPlayer();
