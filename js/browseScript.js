@@ -51,7 +51,7 @@ class FilmModel{
     makeRequest(page){
         let result;
         let request = new XMLHttpRequest();
-        request.open("GET", `http://www.omdbapi.com/?apikey=9c2c1474&s=Batman&page=${page}`, false);
+        request.open("GET", `https://www.omdbapi.com/?apikey=9c2c1474&s=Batman&page=${page}`, false);
         request.addEventListener('load', () => {
             let e;
             try{
