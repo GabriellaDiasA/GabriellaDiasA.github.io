@@ -25,7 +25,7 @@ class View{
             img.src = this.posters[poster];
             img.addEventListener('click', () => {
                 localStorage.setItem("film", JSON.stringify(this.films[poster]));
-                location.href = "http://127.0.0.1:5500/info.html";
+                location.href = "https://gabrielladiasa.github.io/info.html";
             })
             this.main.append(img);
         }
