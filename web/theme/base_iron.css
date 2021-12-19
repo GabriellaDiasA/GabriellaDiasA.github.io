@@ -1,0 +1,281 @@
+*{
+    box-sizing: border-box;
+    margin: 0 0;
+    padding: 0 0;
+    border: 0 0;
+}
+
+body{
+    user-select: none;
+    font-family:Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    background-color: #050505;
+}
+
+h1{
+    color: #EEEEEE;
+}
+
+h3{
+    font-size: 16px;
+    color: white;
+}
+hr{
+    margin-bottom: 4px;
+}
+
+p{
+    font-size: 14px;
+    color: white;
+}
+
+.flexContainer{
+    display: flex;
+}
+
+#gameContainer{
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 100vh;
+    width: 100vw;
+}
+
+#topDiv{
+    position: absolute;
+    z-index: 1;
+    height: 53px;
+    width: 100vw;   
+    background-color: #302828;
+
+    border-style: solid;
+    border-color: #333131;
+    border-width: 0;
+    border-bottom-width: 2px;
+    padding-left: 10px;
+
+    flex-flow: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#leftDiv{
+    height: 100%;   
+    width: 20%;
+    background-color: #201818;
+
+    border-style: solid;
+    border-color: #242222;
+    border-width: 0;
+    border-right-width: 2px;
+    padding-top: 60px;
+    padding-left: 5px;
+
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: scroll;
+}
+
+#midDiv{
+    padding-top: 53px;
+    width: 60%;
+    height: 100%;
+    background-color: #161414;
+    margin-bottom: 2px;
+
+    flex-flow: column;
+}
+
+#rightDiv{
+    margin-top: 53px;
+    height: 100%;
+    width: 20%;
+    background-color: #201818;
+
+    border-style: solid;
+    border-color: #242222;
+    border-width: 0;
+    border-left-width: 2px;
+}
+
+#baseResourceDisplay{
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#craftedResourceDisplay{
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.gridContainer{
+    display: grid;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+    border-style: dotted;
+    border-width: 0;
+    border-color: #242222;
+    border-bottom-width: 1px;
+    grid-template-columns: 1.2fr 0.8fr 0.8fr 0.7fr;
+    grid-template-rows: auto;
+    font-size: 12.5px;
+}
+
+.labelCell{
+    color: white;
+}
+
+.amountCell{
+    color: white;
+    text-align: right;
+}
+
+.limitCell{
+    color: grey;
+}
+
+.rateCell{
+    text-align: right;  
+    color: white;
+}
+
+#gameMenu{
+    z-index: 1;
+    position: absolute;
+    height: 40px;
+    width: inherit;
+    background-color: #201818;
+
+    border-style: solid;
+    border-color: #242222;
+    border-width: 0;
+    border-bottom-width: 2px;
+}
+
+.gameMenuItem{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+    cursor: pointer;
+
+    background-color: #201818;
+    border: solid 1px #242222
+}
+
+#gameButtons{
+    padding: 10px;
+    margin-top: 40px;
+    overflow-y: scroll; 
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding-bottom: 40%;
+}
+
+.itemSpace{
+    padding: 5px;
+    display: flex;
+    height: 60px;
+    width: 25%;
+    justify-content: center;
+    align-items: center;
+}
+
+.item{
+    cursor: pointer;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    color: #EEEEEE;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    background-color: rgb(90, 0, 0);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    font-size: 30px;
+    text-align: center;
+}
+
+.item:hover{
+    transition-duration: 70ms;
+    border-color: rgba(255,255,255,0.8);
+}
+
+#infoDiv{
+    padding: 10px;
+    display: inline;
+    z-index: 2;
+    position: absolute;
+    min-height: 10px;
+    min-width: 180px;
+    height: auto;
+    width: auto;
+    max-width: 200px;
+    background-color: #503535;
+    border: 1px solid #403030;
+    border-radius: 4px;
+}
+
+.switchDiv{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    width: auto;
+    background-color: rgba(255,255,255,0.1);
+    padding-right: 3px;
+    padding-left: 3px;
+    margin-top: 2px;
+}
+
+span{
+    display: block;
+    height: auto;
+    border-right: 2px;
+    border-left: 2px;
+    width: 5px;
+    font-size: 14px;
+    color: white;
+}
+
+.switchOn p{
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.switchOff p{
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.flavorText{
+    font-size: 11px;
+    font-style: italic;
+    text-align: left;
+}
+
+#infoText{
+    font-size: 13px;
+    text-align: right;
+}
+
+/* Webkit stuff */
+::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
