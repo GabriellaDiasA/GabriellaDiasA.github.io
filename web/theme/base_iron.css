@@ -19,6 +19,7 @@ h1{
 h3{
     font-size: 16px;
     color: white;
+    text-align: left;
 }
 hr{
     margin-bottom: 4px;
@@ -176,13 +177,29 @@ p{
 }
 
 #gameButtons{
-    padding: 10px;
+    padding: 5px;
     margin-top: 40px;
+    overflow-y: scroll; 
+    flex-flow: column nowrap;
+    padding-bottom: 40%;
+}
+
+#playerActions{
+    padding: 5px;
+    margin-top: 15px;
     overflow-y: scroll; 
     flex-flow: row wrap;
     justify-content: flex-start;
     align-items: center;
-    padding-bottom: 40%;
+}
+
+#playerBuildings{
+    padding: 5px;
+    margin-top: 15px;
+    overflow-y: scroll; 
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .itemSpace{
@@ -215,7 +232,15 @@ p{
     border-color: rgba(255,255,255,0.8);
 }
 
-#infoDiv{
+.purchased{
+    background-color: rgb(60, 0, 0);
+}
+
+.purchased p {
+    color: grey;
+}
+
+.infoDisplay{
     padding: 10px;
     display: inline;
     z-index: 2;
@@ -224,7 +249,7 @@ p{
     min-width: 180px;
     height: auto;
     width: auto;
-    max-width: 200px;
+    max-width: 350px;
     background-color: #503535;
     border: 1px solid #403030;
     border-radius: 4px;
@@ -269,7 +294,7 @@ span{
     text-align: left;
 }
 
-#infoText{
+.infoText{
     font-size: 13px;
     text-align: right;
 }

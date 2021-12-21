@@ -8,6 +8,8 @@ export class MenuHTML extends HTMLWrapper{
 
         this.configure();
         this.append();
+
+        return this.menuItem;
     }
 
     configure(){
