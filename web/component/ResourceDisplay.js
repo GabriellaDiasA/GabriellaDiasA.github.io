@@ -25,6 +25,26 @@ export class ResourceDisplayHTML extends HTMLWrapper {
 
     append() {
         super.append();
-        DOM.baseResourceDisplay.append(this.gridContainer);
+        let title = document.createElement('h3');
+        switch (this.itemReference.type) {
+            case 'extraction':
+                title.setAttribute("id", "extractionTitle");
+                title.textContent = "Extraction:";
+                if (!document.getElementById("extractionTitle")) {
+                    DOM.extractionResourceDisplay.append(title)
+                }
+                DOM.extractionResourceDisplay.append(this.gridContainer);
+                break;
+            case 'conversion':
+                title.setAttribute("id", "conversionTitle");
+                title.textContent = "Conversion:";
+                if (!document.getElementById("conversionTitle")) {
+                    DOM.conversionResourceDisplay.append(title)
+                }
+                DOM.conversionResourceDisplay.append(this.gridContainer);
+                break;
+            default:
+                break;
+        }
     }
 }

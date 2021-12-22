@@ -100,20 +100,16 @@ p{
     border-left-width: 2px;
 }
 
-#baseResourceDisplay{
+.resourceDisplay{
     display: flex;
     flex-flow: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 100%;
+    width: 100%;  
 }
 
-#craftedResourceDisplay{
-    display: flex;
-    flex-flow: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
+.resourceDisplay h3{
+    margin-top: 8px;
 }
 
 .gridContainer{

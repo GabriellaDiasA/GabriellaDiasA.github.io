@@ -7,12 +7,18 @@ export class GridCell extends HTMLWrapper{
         super(item);
         this.parent = item.parent;
         this.parentLabel = item.parentLabel;
+        this.prefix = "";
+        this.suffix = "";
         this.cell = document.createElement('div');
         this.resource = Object.entries(playerResources).find(entry => entry[1].label == this.parentLabel)[0]
 
         switch (this.label) {
             case 'limit':
                 this.prefix = '/';
+                break;
+            case 'rate':
+                this.prefix = (playerResources[this.resource][this.label] >= 0 ? "+" : "-");
+                this.suffix = "/s";
                 break;
             default:
                 this.prefix = '';
@@ -32,16 +38,15 @@ export class GridCell extends HTMLWrapper{
         if (typeof content === 'number') {
             content = content.toFixed(2)
         }
-        this.text.textContent = this.prefix + content
+        this.text.textContent = this.prefix + content + this.suffix;
     }
 
     update(){
         setInterval(() => {
             let content = playerResources[this.resource][this.label];
-            if (typeof content === 'number') {
-                content = content.toFixed(2)
-            }
-            this.text.textContent = this.prefix + content
+            if (this.label == 'rate') content *= 20;
+            if (typeof content === 'number') content = content.toFixed(2)
+            this.text.textContent = this.prefix + content + this.suffix;
         }, DOM.screenTick * 10)
     }
 

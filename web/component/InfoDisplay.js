@@ -1,3 +1,5 @@
+import * as DOM from '../config/constants.js'
+
 export class InfoDisplay {
     constructor(item, element, type, event) {
         this.itemReference = item;
@@ -6,8 +8,10 @@ export class InfoDisplay {
         this.event = event;
         this.infoCard = document.createElement('div');
         this.pos;
+        this.listener;
 
         this.maybeConfigure();
+        this.update();
         this.append();
     }
 
@@ -21,6 +25,8 @@ export class InfoDisplay {
 
         this.infoCard.style.top = this.pos.y.toString() + "px";
         this.infoCard.style.left = this.pos.x.toString() + "px";
+
+        this.referredElement.addEventListener("mouseleave", () => clearInterval(this.listener))
 
         switch (this.type) {
             case "Action":
@@ -41,6 +47,18 @@ export class InfoDisplay {
             default:
                 break;
         }
+    }
+
+    update() {
+        if (this.type == "Action") return;
+        this.listener = setInterval(() => {
+            let p = document.getElementsByClassName("infoPrice");
+            for (let i in p) {
+                if (!p[i].id) return;
+                let label = this.itemReference.price[p[i].id].label
+                p[i].textContent = `${label}: ${this.itemReference.price[p[i].id].amount.toFixed(2)}`;
+            }
+        }, DOM.screenTick * 5)
     }
 
     append() {
@@ -80,11 +98,13 @@ export class InfoDisplay {
         this.appendTitle("Price")
 
         let price = this.itemReference.price;
-        Object.entries(price).forEach(res => {
-            res = res[1];
+        Object.entries(price).forEach(resource => {
+            let res = resource[1];
             if (res.amount) {
                 let p = document.createElement('p');
                 p.setAttribute("class", "infoText");
+                p.classList.add("infoPrice");
+                p.setAttribute("id", resource[0]);
                 let label = res.label;
                 p.textContent = `${label}: ${res.amount.toFixed(2)}`;
                 this.infoCard.append(p);
