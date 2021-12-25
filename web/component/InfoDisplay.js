@@ -1,3 +1,5 @@
+import { resourceList } from '../../lib/config/contents.js';
+import { playerResources } from '../../lib/model/player/resources.js';
 import * as DOM from '../config/constants.js'
 
 export class InfoDisplay {
@@ -28,25 +30,8 @@ export class InfoDisplay {
 
         this.referredElement.addEventListener("mouseleave", () => clearInterval(this.listener))
 
-        switch (this.type) {
-            case "Action":
-                this.configureAction();
-                break;
-            case "Building":
-                this.configureBuilding();
-                break;
-            case "Science":
-                this.configureScience();
-                break;
-            case "Storage":
-                this.configureStorage();
-                break;
-            case "Tech":
-                this.configureTech();
-                break;
-            default:
-                break;
-        }
+        this[`configure${this.type}`]();
+        this.configureFlavorText();
     }
 
     update() {
@@ -54,9 +39,18 @@ export class InfoDisplay {
         this.listener = setInterval(() => {
             let p = document.getElementsByClassName("infoPrice");
             for (let i in p) {
-                if (!p[i].id) return;
-                let label = this.itemReference.price[p[i].id].label
+                if (!p[i].id) break;
+                let label = this.itemReference.price[p[i].id].label;
                 p[i].textContent = `${label}: ${this.itemReference.price[p[i].id].amount.toFixed(2)}`;
+            }
+            p = document.getElementsByClassName("infoProduction");
+            for (let i in p) {
+                if (!p[i].id) break;
+                let resource = this.itemReference.production[p[i].id];
+                let bonus = this.itemReference.bonus[p[i].id].amount || 0;
+                let production = (resource.amount * (bonus + 1)) * 20;
+                let prefix = (production > 0 ? "+" : "");
+                p[i].textContent = `${resource.label}: ${prefix}${production.toFixed(2)}/s`;
             }
         }, DOM.screenTick * 5)
     }
@@ -65,83 +59,66 @@ export class InfoDisplay {
         this.referredElement.append(this.infoCard);
     }
 
-    configureAction() {
+    configureActionHTML() {
         this.configureInfo();
-        this.configureFlavorText();
     }
 
-    configureBuilding() {
-        this.configurePrice();
-        this.configureProduction();
-        this.configureFlavorText();
+    configureBuildingHTML() {
+        this.configureAttributes(["price", "production"]);
     }
 
-    configureScience() {
-        this.configurePrice();
+    configureScienceHTML() {
+        this.configureAttributes(["price"]);
         this.configureInfo();
-        this.configureFlavorText();
     }
 
-    configureStorage() {
-        this.configurePrice();
-        this.configureCapacity();
-        this.configureFlavorText();
+    configureStorageHTML() {
+        this.configureAttributes(["price", "capacity"]);
     }
 
-    configureTech() {
-        this.configurePrice();
+    configureTechHTML() {
+        this.configureAttributes(["price"]);
         this.configureInfo();
-        this.configureFlavorText();
     }
 
-    configurePrice() {
-        this.appendTitle("Price")
-
-        let price = this.itemReference.price;
-        Object.entries(price).forEach(resource => {
-            let res = resource[1];
-            if (res.amount) {
-                let p = document.createElement('p');
-                p.setAttribute("class", "infoText");
-                p.classList.add("infoPrice");
-                p.setAttribute("id", resource[0]);
-                let label = res.label;
-                p.textContent = `${label}: ${res.amount.toFixed(2)}`;
-                this.infoCard.append(p);
-            }
-        })
+    configureMachineHTML() {
+        this.configureAttributes(["price", "production", "value"]);
     }
 
-    configureProduction() {
-        this.appendTitle("Production");
-
-        let production = this.itemReference.production;
-        Object.entries(production).forEach(res => {
-            res = res[1]
-            if (res.amount) {
-                let p = document.createElement('p');
-                p.setAttribute("class", "infoText");
-                let label = res.label;
-                p.textContent = `${label}: ${res.amount.toFixed(2) * 20}`;
-                this.infoCard.append(p);
-            }
-        })
+    configureEnergyHTML() {
+        this.configureAttributes(["price", "value"]);
     }
 
-    configureCapacity() {
-        this.appendTitle("Capacity");
+    configureDataHTML() {
+        this.configureAttributes(["price", "production", "value"]);
+    }
 
-        let capacity = this.itemReference.capacity;
-        Object.entries(capacity).forEach(res => {
-            res = res[1]
-            if (res.amount) {
+    configureInfrastructureHTML() {
+        this.configureAttributes(["price"])
+    }
+
+    configureAttributes(list) {
+        for (let type in list) {
+            type = list[type]
+            type.toLowerCase();
+
+            if (type == "value") {
+                this.appendTitle("Energy demand");
                 let p = document.createElement('p');
-                p.setAttribute("class", "infoText");
-                let label = res.label;
-                p.textContent = `${label}: ${res.amount.toFixed(2)}`;
-                this.infoCard.append(p);
+                p.classList.add("infoText");
+                p.setAttribute("id", "energyInfoDisplayText");
+                p.textContent = `${this.itemReference.value}MW`;
+                this.infoCard.append(p)
+                break;
             }
-        })
+
+            this.appendTitle(capitalizeFirstLetter(type));
+
+            let attribute = this.itemReference[type];
+            Object.entries(attribute).forEach(resource => {
+                this.configureResource(resource, capitalizeFirstLetter(type))
+            })
+        }
     }
 
     configureInfo() {
@@ -163,10 +140,39 @@ export class InfoDisplay {
         }
     }
 
+    configureResource(resource, type = "Text") {
+        let res = resource[1];
+        let name = resource[0];
+        let prefix = "";
+        let suffix = "";
+        let multiplier = 1;
+        let bonus = 0;
+        if (type == "Production") {
+            multiplier = 20;
+            prefix = (res.amount > 0 ? "+" : "");
+            bonus = this.itemReference.bonus[name].amount || 0;
+            suffix = "/s";
+        }
+        if (res.amount) {
+            let p = document.createElement('p');
+            p.setAttribute("class", `info${type}`);
+            p.classList.add("infoText");
+            p.setAttribute("id", resource[0]);
+            let label = res.label;
+            p.textContent = `${label}: ${prefix}${(multiplier * res.amount * (bonus + 1)).toFixed(2)}${suffix}`;
+            if (resourceList[name].render) this.infoCard.append(p);
+        }
+    }
+
     appendTitle(text) {
         let title = document.createElement('h3');
         title.textContent = text + ":";
         this.infoCard.append(title);
         this.infoCard.append(document.createElement('hr'));
+        return title;
     }
+}
+
+function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.substring(1);
 }

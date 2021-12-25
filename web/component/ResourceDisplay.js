@@ -25,26 +25,31 @@ export class ResourceDisplayHTML extends HTMLWrapper {
 
     append() {
         super.append();
-        let title = document.createElement('h3');
         switch (this.itemReference.type) {
             case 'extraction':
-                title.setAttribute("id", "extractionTitle");
-                title.textContent = "Extraction:";
-                if (!document.getElementById("extractionTitle")) {
-                    DOM.extractionResourceDisplay.append(title)
-                }
-                DOM.extractionResourceDisplay.append(this.gridContainer);
+                this.configureAndAppendTitle(DOM.extractionResourceDisplay)
                 break;
             case 'conversion':
-                title.setAttribute("id", "conversionTitle");
-                title.textContent = "Conversion:";
-                if (!document.getElementById("conversionTitle")) {
-                    DOM.conversionResourceDisplay.append(title)
-                }
-                DOM.conversionResourceDisplay.append(this.gridContainer);
+                this.configureAndAppendTitle(DOM.conversionResourceDisplay)
                 break;
+            case 'data':
+                this.configureAndAppendTitle(DOM.dataResourceDisplay)
             default:
                 break;
         }
     }
+
+    configureAndAppendTitle(DOMElement) {
+        let title = document.createElement('h3');
+        title.setAttribute("id", `${this.itemReference.type}Title`);
+        title.textContent = `${capitalizeFirstLetter(this.itemReference.type)}:`;
+        if (!document.getElementById(`${this.itemReference.type}Title`)) {
+            DOMElement.append(title)
+        }
+        DOMElement.append(this.gridContainer);
+    }
+}
+
+function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.substring(1);
 }

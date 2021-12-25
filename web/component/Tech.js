@@ -13,8 +13,11 @@ export class TechHTML extends HTMLWrapper {
     }
 
     configure() {
-        super.configure("Tech");
-        this.button.addEventListener("click", () => Player.purchase(this.itemReference));
+        super.configure(this.constructor.name);
+        if (this.tech[1].purchased) { this.setPurchased() }
+        this.button.addEventListener("click", () => {
+            if (Player.purchase(this.itemReference)) { this.setPurchased(); }
+        })
     }
 
     append() {
@@ -22,5 +25,9 @@ export class TechHTML extends HTMLWrapper {
         this.button.append(this.text);
         this.buttonContainer.append(this.button);
         DOM.gameButtons.append(this.buttonContainer);
+    }
+
+    setPurchased() {
+        this.button.classList.add("purchased");
     }
 }

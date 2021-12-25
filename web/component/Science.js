@@ -14,7 +14,7 @@ export class ScienceHTML extends HTMLWrapper {
     }
 
     configure() {
-        super.configure("Science");
+        super.configure(this.constructor.name);
         if (this.science[1].purchased) { this.setPurchased() }
         this.button.addEventListener("click", () => {
             if (Player.purchase(this.itemReference)) { this.setPurchased(); }

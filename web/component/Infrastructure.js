@@ -1,7 +1,7 @@
-import { playerStorage } from "../../lib/model/player/storage.js";
+import { playerInfrastructure } from "../../lib/model/player/infrastructure.js";
 import { PurchaseableHTML } from "./Purchaseable.js";
 
-export class StorageHTML extends PurchaseableHTML{
+export class InfrastructureHTML extends PurchaseableHTML{
     constructor(item){
         super(item);
 
@@ -11,8 +11,8 @@ export class StorageHTML extends PurchaseableHTML{
     }
 
     configure() {
-        this.display = document.getElementById("playerStorage");
-        this.list = playerStorage;
+        this.display = document.getElementById("playerInfrastructure");
+        this.list = playerInfrastructure
         super.configure(this.constructor.name);
     }
 

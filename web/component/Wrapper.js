@@ -4,6 +4,8 @@ export class HTMLWrapper{
     constructor(item){
         this.itemReference = item;
         this.label = item.label;
+        this.list;
+        this.display;
         this.buttonContainer = document.createElement('div');
         this.button = document.createElement('div');
         this.text = document.createElement('p');
@@ -18,6 +20,7 @@ export class HTMLWrapper{
         this.buttonContainer.setAttribute("class", "itemSpace");
         this.buttonContainer.setAttribute("id", this.label);
         this.button.setAttribute("class", "item");
+        this.button.classList.add(name)
         this.addInfoDisplayListeners(name)
     }
 

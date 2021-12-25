@@ -56,9 +56,13 @@ p{
     padding-left: 10px;
 
     flex-flow: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
 }
+
+#topDiv * {
+    padding-right: 20px;
+}   
 
 #leftDiv{
     height: 100%;   
@@ -89,8 +93,7 @@ p{
 }
 
 #rightDiv{
-    margin-top: 53px;
-    height: 100%;
+    height: 100%;   
     width: 20%;
     background-color: #201818;
 
@@ -98,6 +101,13 @@ p{
     border-color: #242222;
     border-width: 0;
     border-left-width: 2px;
+    padding-top: 60px;
+    padding-left: 5px;
+
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: scroll;
 }
 
 .resourceDisplay{
@@ -122,7 +132,7 @@ p{
     border-width: 0;
     border-color: #242222;
     border-bottom-width: 1px;
-    grid-template-columns: 1.2fr 0.8fr 0.8fr 0.7fr;
+    grid-template-columns: 0.8fr 1.0fr 1.0fr 0.7fr;
     grid-template-rows: auto;
     font-size: 12.5px;
 }
@@ -180,18 +190,7 @@ p{
     padding-bottom: 40%;
 }
 
-#playerActions{
-    padding: 5px;
-    margin-top: 15px;
-    overflow-y: scroll; 
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-#playerBuildings{
-    padding: 5px;
-    margin-top: 15px;
+.purchaseableSpace{
     overflow-y: scroll; 
     flex-flow: row wrap;
     justify-content: flex-start;
@@ -210,12 +209,13 @@ p{
 .item{
     cursor: pointer;
     display: flex;
+    flex-flow: row nowrap;
     height: 100%;
     width: 100%;
     color: #EEEEEE;
-    justify-content: center;
+    justify-content: space-evenly;
+    align-content: center;
     align-items: center;
-    flex-flow: column;
     background-color: rgb(90, 0, 0);
     border-radius: 10px;
     border: 2px solid rgba(0, 0, 0, 0.5);
@@ -223,9 +223,53 @@ p{
     text-align: center;
 }
 
+.displayTitle{
+    margin-top: 15px;
+}
+
+.MachineHTML{
+    width: 70%;
+    justify-self: left;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
 .item:hover{
     transition-duration: 70ms;
     border-color: rgba(255,255,255,0.8);
+}
+
+.MachineHTML p{
+    width: 70%;
+    text-align: left;
+    line-height: inherit;
+    vertical-align: middle;
+}
+
+.switchDiv{
+    width: 30%;
+    height: 70%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    background-color: #655050;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-left: 2px solid rgba(0, 0, 0, 0);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.switchDiv:hover{
+    transition-duration: 70ms;
+    border-color: rgba(255,255,255,0.8);
+}
+
+.switchDiv p{
+    width: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
 }
 
 .purchased{
@@ -239,7 +283,7 @@ p{
 .infoDisplay{
     padding: 10px;
     display: inline;
-    z-index: 2;
+    z-index: 3;
     position: absolute;
     min-height: 10px;
     min-width: 180px;
@@ -251,19 +295,6 @@ p{
     border-radius: 4px;
 }
 
-.switchDiv{
-    display: flex;
-    flex-flow: column;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-    width: auto;
-    background-color: rgba(255,255,255,0.1);
-    padding-right: 3px;
-    padding-left: 3px;
-    margin-top: 2px;
-}
-
 span{
     display: block;
     height: auto;
@@ -272,16 +303,6 @@ span{
     width: 5px;
     font-size: 14px;
     color: white;
-}
-
-.switchOn p{
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.switchOff p{
-    cursor: pointer;
-    font-size: 16px;
 }
 
 .flavorText{

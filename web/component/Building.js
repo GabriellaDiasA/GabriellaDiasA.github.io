@@ -1,13 +1,10 @@
-import { HTMLWrapper } from './Wrapper.js';
-import { Player } from '../../lib/model/player/player.js';
 import { playerBuildings } from '../../lib/model/player/buildings.js';
 import * as DOM from '../config/constants.js';
+import { PurchaseableHTML } from './Purchaseable.js';
 
-export class BuildingHTML extends HTMLWrapper {
+export class BuildingHTML extends PurchaseableHTML {
     constructor(item) {
         super(item);
-        this.buildingsDisplay = document.getElementById("playerBuildings");
-        this.building = Object.entries(playerBuildings).find(building => building[1].label == this.label)[0];
 
         this.configure();
         this.update();
@@ -15,21 +12,16 @@ export class BuildingHTML extends HTMLWrapper {
     }
 
     configure() {
-        super.configure("Building");
-        this.button.addEventListener("click", () => Player.purchase(this.itemReference));
-        this.text.textContent = `${this.label}: ${playerBuildings[this.building]["amount"]}`;
+        this.display = document.getElementById("playerBuildings");
+        this.list = playerBuildings
+        super.configure(this.constructor.name);
     }
 
     update() {
-        setInterval(() => {
-            this.text.textContent = `${this.label}: ${playerBuildings[this.building]["amount"]}`;
-        }, DOM.screenTick)
+        super.update();
     }
 
     append() {
         super.append();
-        this.button.append(this.text);
-        this.buttonContainer.append(this.button);
-        this.buildingsDisplay.append(this.buttonContainer);
     }
 }
